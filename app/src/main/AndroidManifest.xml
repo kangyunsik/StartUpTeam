@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.startupteam">
 
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
@@ -14,23 +13,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StartUpTeam"
         android:usesCleartextTraffic="true">
-
-        <activity
-            android:name=".MapActivity">
-        </activity>
-
-
+        android:resource="@xml/network_security_config" />
+        android:name="com.google.android.actions"
+        <activity android:name=".MapActivity"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <!-- API KEY -->
+        </activity> <!-- API KEY -->
         <meta-data
             android:name="com.kakao.sdk.AppKey"
-            android:value="ca7e97ee9a50826a2ef734e8146020c0"/>
-        <!-- API KEY -->
+            android:value="97e75e6cdeee669279a76fdcf5bf79d6" />
     </application>
 
 </manifest>
