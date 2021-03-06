@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">StartUpTeam</string>
+    <string name="radiobutton">RadioButton</string>
+    <string name="button">Button</string>
 </resources>

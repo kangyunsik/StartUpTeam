@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
         Btn_PwFind.setText("비밀번호 찾기");
         RdBtn_consist.setText("로그인 상태 유지");
 
-
         Intent intent = getIntent();
 
         Btn_SignIn.setOnClickListener(new View.OnClickListener(){
