@@ -21,9 +21,6 @@
         <!-- API KEY -->
 
         <activity android:name=".MapActivity">
-            <intent-filter>
-
-            </intent-filter>
         </activity>
         <activity android:name=".MainActivity">
             <intent-filter>
