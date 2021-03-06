@@ -52,13 +52,14 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(getApplicationContext(), MapActivity.class);     // After Sign in, Straight to Next Activity.
 
-                intent.putExtra("id",id);
-                intent.putExtra("password",password);
+                //intent.putExtra("id",id);
+                //intent.putExtra("password",password);
                 startActivity(intent);
             }
         });
 
 
     }
+
 
 }
