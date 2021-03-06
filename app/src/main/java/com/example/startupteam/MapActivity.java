@@ -31,8 +31,8 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_map);
 
-        setContentView(R.layout.activity_main);
         //지도를 띄우자
         // java code
         mapView = new MapView(this);
