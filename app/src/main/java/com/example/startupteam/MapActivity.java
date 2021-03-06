@@ -33,7 +33,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
 
         setContentView(R.layout.activity_map);
         //지도를 띄우자
-        // java code
+        // java codes
         mapView = new MapView(this);
         mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
         mapViewContainer.addView(mapView);
