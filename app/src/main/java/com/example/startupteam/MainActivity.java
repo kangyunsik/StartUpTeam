@@ -25,14 +25,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button Btn_SignIn = (Button) findViewById(R.id.button_login);
-        Button Btn_SignUp = (Button) findViewById(R.id.button_left);
-        Button Btn_PwFind = (Button) findViewById(R.id.button_right);
+        EditText edit_id = findViewById(R.id.edit_id);
+        EditText edit_password = findViewById(R.id.edit_pw);
+        edit_id.setText("");
 
-        TextView editText_id = (TextView) findViewById(R.id.edit_id);
-        TextView editText_pw = (TextView) findViewById(R.id.edit_pw);
+        Button Btn_SignIn = findViewById(R.id.button_login);
+        Button Btn_SignUp = findViewById(R.id.button_left);
+        Button Btn_PwFind = findViewById(R.id.button_right);
 
-        RadioButton RdBtn_consist = (RadioButton) findViewById(R.id.radioButton);
+        RadioButton RdBtn_consist = findViewById(R.id.radioButton);
 
         Btn_SignIn.setText("로그인");
         Btn_SignUp.setText("회원가입");
@@ -44,9 +45,6 @@ public class MainActivity extends AppCompatActivity {
         Btn_SignIn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                EditText edit_id = (EditText) findViewById(R.id.edit_id);
-                EditText edit_password = (EditText) findViewById(R.id.edit_pw);
-
                 String id = edit_id.getText().toString();
                 String password = edit_password.getText().toString();
 
