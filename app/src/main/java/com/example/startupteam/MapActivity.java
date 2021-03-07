@@ -27,11 +27,14 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
     private static final int PERMISSIONS_REQUEST_CODE = 100;
     String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION};
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_map);
+
+
+
         //지도를 띄우자
         // java codes
         mapView = new MapView(this);
