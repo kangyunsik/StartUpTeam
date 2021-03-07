@@ -2,6 +2,7 @@ package com.example.startupteam;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -13,6 +14,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Base64;
@@ -29,6 +31,11 @@ import java.security.NoSuchAlgorithmException;
 
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSIONS_REQUEST_CODE = 100;
+
+    String[] required_permission ={
+            Manifest.permission.ACCESS_FINE_LOCATION        // REQUIRED PERMISSIONs
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,39 +60,64 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        Button Btn_SignIn = (Button) findViewById(R.id.button_login);
-        Button Btn_SignUp = (Button) findViewById(R.id.button_left);
-        Button Btn_PwFind = (Button) findViewById(R.id.button_right);
+        Checker checker = new Checker();                    // PERMISSION CHECKER THREAD
+        checker.start();
 
-        TextView editText_id = (TextView) findViewById(R.id.edit_id);
-        TextView editText_pw = (TextView) findViewById(R.id.edit_pw);
+        EditText edit_id = findViewById(R.id.edit_id);
+        EditText edit_password = findViewById(R.id.edit_pw);
+        edit_id.setText("");
 
-        RadioButton RdBtn_consist = (RadioButton) findViewById(R.id.radioButton);
+        Button Btn_SignIn = findViewById(R.id.button_login);
+        Button Btn_SignUp = findViewById(R.id.button_left);
+        Button Btn_PwFind = findViewById(R.id.button_right);
+
+        RadioButton RdBtn_consist = findViewById(R.id.radioButton);
 
         Btn_SignIn.setText("로그인");
         Btn_SignUp.setText("회원가입");
         Btn_PwFind.setText("비밀번호 찾기");
         RdBtn_consist.setText("로그인 상태 유지");
 
-        Intent intent = getIntent();
+        Btn_SignIn.setOnClickListener((View v) -> {
+            String id = edit_id.getText().toString();
+            String password = edit_password.getText().toString();
+            int response;
 
-        Btn_SignIn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                EditText edit_id = (EditText) findViewById(R.id.edit_id);
-                EditText edit_password = (EditText) findViewById(R.id.edit_pw);
+            Intent intent = new Intent(getApplicationContext(), MapActivity.class);     // After Sign in, Straight to Next Activity.
+            intent.putExtra("id",id);
+            intent.putExtra("password",password);
 
-                String id = edit_id.getText().toString();
-                String password = edit_password.getText().toString();
 
-                Intent intent = new Intent(getApplicationContext(), MapActivity.class);     // After Sign in, Straight to Next Activity.
+            response = checker.getResponse();
 
-                //intent.putExtra("id",id);
-                //intent.putExtra("password",password);
+            if(response == 1) {
                 startActivity(intent);
+            }else{
+                finish();
             }
         });
 
+//        Btn_SignIn.setOnClickListener(new View.OnClickListener(){
+//            @Override
+//            public void onClick(View v){
+//                String id = edit_id.getText().toString();
+//                String password = edit_password.getText().toString();
+//                int response;
+//
+//                Intent intent = new Intent(getApplicationContext(), MapActivity.class);     // After Sign in, Straight to Next Activity.
+//                intent.putExtra("id",id);
+//                intent.putExtra("password",password);
+//
+//
+//                response = checker.getResponse();
+//
+//                if(response == 1) {
+//                    startActivity(intent);
+//                }else{
+//                    finish();
+//                }
+//            }
+//        });
 
 
     }
@@ -122,20 +154,48 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+
+    private class Checker extends Thread {
+        private int response;
+
+        public Checker() {
+            // initializing
+        }
+
+        protected int getResponse() {
+            return this.response;
+        }
+
+        @Override
+        public void run() {
+            for(String permit : required_permission) {
+                int check = checkCallingOrSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+
+                if (check == PackageManager.PERMISSION_DENIED) {
+                    requestPermissions(required_permission,0);
+                }
+            }
+            this.response = 1;
+        }
+    }
+
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSIONS_REQUEST_CODE:
-                for (int i = 0; i < grantResults.length; i++) {
-                    // grantResults[] : 허용된 권한은 0, 거부한 권한은 -1
-                    if (grantResults[i] < 0) {
-                        Toast.makeText(MainActivity.this, "해당 권한을 활성화 하셔야 합니다.", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode==0)
+        {
+            for(int grantResult : grantResults)
+            {
+                if(grantResult==PackageManager.PERMISSION_GRANTED){         // If allowed
+                    Toast.makeText(getApplicationContext(),"앱 권한을 허용했습니다.",Toast.LENGTH_LONG).show();
                 }
-                // 허용했다면 이 부분에서..
-
-                break;
+                else {                                                      // If not allowed
+                    Toast.makeText(getApplicationContext(),"앱 권한이 필요합니다.",Toast.LENGTH_LONG).show();
+                    finish();
+                }
+            }
         }
     }
 
