@@ -39,7 +39,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
         mapViewContainer = findViewById(R.id.map_view);
         mapViewContainer.addView(mapView);
         mapView.setMapViewEventListener(this);
-        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithHeading);
+        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
         if (!checkLocationServicesStatus()) {
             showDialogForLocationServiceSetting();
         } else {
