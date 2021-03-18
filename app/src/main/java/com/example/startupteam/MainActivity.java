@@ -14,12 +14,20 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -68,8 +76,71 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+
+        Button test_btn = findViewById(R.id.test_button);
+        test_btn.setOnClickListener((View v)->{
+            Intent intent = new Intent();
+            intent.setData(Uri.parse("kakaomap://route?sp=37.537229,127.005515&ep=37.4979502,127.0276368&by=PUBLICTRANSIT"));
+            startActivity(intent);
+
+        });
+
+        Button test_btn2 = findViewById(R.id.test_button2);
+        test_btn2.setOnClickListener((View v)->{
+            URLTh thread = new URLTh();
+            thread.start();
+
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
     }
 
+    private class URLTh extends Thread{
+        @Override
+        public void run(){
+            URL url = null;
+            try {
+                url = new URL("https://dapi.kakao.com/v2/local/search/keyword.json?y=37.514322572335935&x=127.06283102249932&radius=20000&query=cafe");
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            HttpURLConnection urlCon = null;
+            try {
+                urlCon = (HttpURLConnection) url.openConnection();
+                urlCon.setRequestProperty("Authorization","KakaoAK 08524df1fb5ba759f2cfd86e83401e49");
+                urlCon.setRequestMethod("GET");
+                urlCon.setDoInput(true);
+                urlCon.setDoOutput(true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }finally{
+                urlCon.disconnect();
+            }
+            Log.d("Suc","success1");
+            try {
+                if (urlCon.getResponseCode() == 200) {
+                    BufferedReader br = new BufferedReader(new InputStreamReader((urlCon.getInputStream()), "UTF-8"));
+                    String str = br.readLine();
+                    Log.d("Suc",str);
+
+                    Log.d("Suc","success");
+                } else {
+                    // Error handling code goes here
+                    Log.d("Suc",Integer.toString(urlCon.getResponseCode()));
+                    Log.d("Suc","fail");
+                }
+            } catch (IOException e) {
+                Log.d("Suc","fail2");
+                e.printStackTrace();
+
+            }
+        }
+    }
 
     private class Checker extends Thread {
         private int response;
