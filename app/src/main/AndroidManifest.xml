@@ -18,6 +18,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StartUpTeam"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".SearchActivity"
+            android:label="@string/title_activity_search"
+            android:theme="@style/Theme.StartUpTeam.NoActionBar"></activity>
+
         <meta-data
             android:name="com.google.android.wearable.standalone"
             android:value="true" />
@@ -26,6 +31,7 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity> <!-- API KEY -->

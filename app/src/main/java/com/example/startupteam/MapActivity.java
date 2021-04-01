@@ -12,11 +12,25 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 
 public class MapActivity extends AppCompatActivity implements MapView.CurrentLocationEventListener, MapView.MapViewEventListener {
@@ -45,6 +59,10 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
         } else {
             checkRunTimePermission();
         }
+    }
+    public void onClickS(View v){
+        Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -110,14 +128,15 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
             }
         }
     }
-    void checkRunTimePermission(){
+
+    void checkRunTimePermission() {
 
         //런타임 퍼미션 처리
         // 1. 위치 퍼미션을 가지고 있는지 체크합니다.
         int hasFineLocationPermission = ContextCompat.checkSelfPermission(MapActivity.this,
                 Manifest.permission.ACCESS_FINE_LOCATION);
 
-        if (hasFineLocationPermission == PackageManager.PERMISSION_GRANTED ) {
+        if (hasFineLocationPermission == PackageManager.PERMISSION_GRANTED) {
             // 2. 이미 퍼미션을 가지고 있다면
             // ( 안드로이드 6.0 이하 버전은 런타임 퍼미션이 필요없기 때문에 이미 허용된 걸로 인식합니다.)
             // 3.  위치 값을 가져올 수 있음
@@ -168,7 +187,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 if (checkLocationServicesStatus()) {
                     Log.d("@@@", "onActivityResult : GPS 활성화 되있음");
                     checkRunTimePermission();
-                    }
+                }
             }
         }
     }
@@ -224,4 +243,48 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
     public void onMapViewMoveFinished(MapView mapView, MapPoint mapPoint) {
 
     }
+
+    private class URLTh extends Thread{
+        @Override
+        public void run(){
+            URL url = null;
+            try {
+                url = new URL("https://dapi.kakao.com/v2/local/search/keyword.json?y=37.514322572335935&x=127.06283102249932&radius=20000&query=cafe");
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            HttpURLConnection urlCon = null;
+            try {
+                urlCon = (HttpURLConnection) url.openConnection();
+                urlCon.setRequestProperty("Authorization","KakaoAK 08524df1fb5ba759f2cfd86e83401e49");
+                urlCon.setRequestMethod("GET");
+                urlCon.setDoInput(true);
+                urlCon.setDoOutput(true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }finally{
+                urlCon.disconnect();
+            }
+            Log.d("Suc","success1");
+            try {
+                if (urlCon.getResponseCode() == 200) {
+                    BufferedReader br = new BufferedReader(new InputStreamReader((urlCon.getInputStream()), "UTF-8"));
+                    String str = br.readLine();
+                    Log.d("Suc",str);
+
+                    Log.d("Suc","success");
+                } else {
+                    // Error handling code goes here
+                    Log.d("Suc",Integer.toString(urlCon.getResponseCode()));
+                    Log.d("Suc","fail");
+                }
+            } catch (IOException e) {
+                Log.d("Suc","fail2");
+                e.printStackTrace();
+
+            }
+        }
+    }
+
 }
+
