@@ -19,9 +19,13 @@
         android:theme="@style/Theme.StartUpTeam"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ResultActivity"
+            android:label="@string/title_activity_result"
+            android:theme="@style/Theme.StartUpTeam.NoActionBar"></activity>
+        <activity
             android:name=".SearchActivity"
             android:label="@string/title_activity_search"
-            android:theme="@style/Theme.StartUpTeam.NoActionBar"></activity>
+            android:theme="@style/Theme.StartUpTeam.NoActionBar" />
 
         <meta-data
             android:name="com.google.android.wearable.standalone"
