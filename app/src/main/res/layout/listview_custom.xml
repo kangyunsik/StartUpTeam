@@ -23,14 +23,20 @@
                 android:id="@+id/placename"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TextView" />
+                android:text="TextView"
+                android:textColor="@color/purple_700"
+                android:textColorHighlight="@color/purple_700"
+                android:visibility="visible" />
 
             <TextView
                 android:id="@+id/roadaddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="TextView" />
+                android:text="TextView"
+                android:textColor="@color/purple_700"
+                android:textColorHighlight="@color/purple_700"
+                android:visibility="visible" />
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

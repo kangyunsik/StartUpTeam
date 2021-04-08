@@ -29,6 +29,7 @@ android {
 }
 
 dependencies {
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
     implementation files('libs/libDaumMapAndroid.jar')
     implementation 'com.squareup.retrofit2:retrofit:2.6.4'
     implementation 'com.squareup.retrofit2:converter-gson:2.6.4'

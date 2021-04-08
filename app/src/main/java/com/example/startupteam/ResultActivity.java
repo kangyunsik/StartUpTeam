@@ -34,6 +34,7 @@ public class ResultActivity extends AppCompatActivity {
     public String str;
     private ArrayList<Document> places = new ArrayList<Document>();
     ResultAdapter myAdapter;
+    ListView listView;
     URLTh r;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,7 @@ public class ResultActivity extends AppCompatActivity {
 
         //리스트뷰
         getString=getIntent().getStringExtra("keyword");
+        listView = (ListView)findViewById(R.id.listView);
         r = new URLTh();
         keyword = getString;
         r.start();
@@ -50,16 +52,12 @@ public class ResultActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        Log.d("test2","aa");
-        ListView listView = (ListView)findViewById(R.id.listView);
-        myAdapter = new ResultAdapter(this,places);
-        listView.setAdapter(myAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView parent, View v, int position, long id){
                 Toast.makeText(getApplicationContext(),
                         myAdapter.getItem(position).getPlaceName(),
-                        Toast.LENGTH_LONG).show();
+                        Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -82,7 +80,8 @@ public class ResultActivity extends AppCompatActivity {
                 Log.d("sss",""+(i+1)+"번째 멤버의 이름 : "+places.get(i).getPlaceName());
                 Log.d("sss",""+(i+1)+"번째 멤버의 주소: "+tempObj.get("road_address_name"));
             }
-
+            myAdapter = new ResultAdapter(ResultActivity.this,places);
+            listView.setAdapter(myAdapter);
         } catch (ParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
