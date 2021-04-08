@@ -96,7 +96,8 @@ public class ResultActivity extends AppCompatActivity {
                 final Document set = new Document();
                 set.setAddressName(tempObj.get("road_address_name").toString());
                 set.setPlaceName(tempObj.get("place_name").toString());
-
+                set.setX(tempObj.get("x").toString());
+                set.setY(tempObj.get("y").toString());
                 places.add(set);
                 Log.d("sss", "" + (i + 1) + "번째 멤버의 이름 : " + places.get(i).getPlaceName());
                 Log.d("sss", "" + (i + 1) + "번째 멤버의 주소: " + tempObj.get("road_address_name"));

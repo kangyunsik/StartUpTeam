@@ -223,12 +223,11 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 start.setPlaceName(data.getStringExtra("place_name"));
                 start.setX(data.getStringExtra("x"));
                 start.setY(data.getStringExtra("y"));
-
                 Toast.makeText(getApplicationContext(),
                         data.getStringExtra("road_address_name"),
                         Toast.LENGTH_LONG).show();
-                //((TextView) findViewById(R.id.start_text)).setText(start.getPlaceName());
-                //mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(Double.parseDouble(data.getStringExtra("x")),Double.parseDouble(data.getStringExtra("y"))),true);
+                ((TextView) findViewById(R.id.start_text)).setText(start.getPlaceName());
+                mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(Double.parseDouble(data.getStringExtra("x")),Double.parseDouble(data.getStringExtra("y"))),true);
             }
         }else if(requestCode == GET_STRING_END){
             if(resultCode == RESULT_OK){
@@ -242,8 +241,8 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 Toast.makeText(getApplicationContext(),
                         data.getStringExtra("road_address_name"),
                         Toast.LENGTH_LONG).show();
-                //((TextView) findViewById(R.id.end_text)).setText(end.getPlaceName());
-                //mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(Double.parseDouble(end.getX()),Double.parseDouble(end.getY())),true);
+                ((TextView) findViewById(R.id.end_text)).setText(end.getPlaceName());
+                mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(Double.parseDouble(end.getX()),Double.parseDouble(end.getY())),true);
             }
         }
     }
