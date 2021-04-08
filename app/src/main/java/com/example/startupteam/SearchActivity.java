@@ -1,5 +1,6 @@
 package com.example.startupteam;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -12,6 +13,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -63,6 +65,7 @@ public class SearchActivity extends AppCompatActivity {
     private EditText editSearch;        // 검색어를 입력할 Input 창
     private SearchAdapter adapter;      // 리스트뷰에 연결할 아답터
     private ArrayList<String> arraylist;
+    private Button buttonSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +74,7 @@ public class SearchActivity extends AppCompatActivity {
 
         editSearch = (EditText) findViewById(R.id.editSearch);
         listView = (ListView) findViewById(R.id.listView);
-
+        buttonSearch = (Button) findViewById(R.id.buttonSearch);
         // 리스트를 생성한다.
         list = new ArrayList<String>();
 
@@ -111,6 +114,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView parent, View v, int position, long id) {
                 editSearch.setText(arraylist.get(position));
+
             }
         });
     }
@@ -142,7 +146,11 @@ public class SearchActivity extends AppCompatActivity {
         // 리스트 데이터가 변경되었으므로 아답터를 갱신하여 검색된 데이터를 화면에 보여준다.
         adapter.notifyDataSetChanged();
     }
-
+    public void onClickSearch(View v){
+        Intent intent = new Intent(getApplicationContext(), ResultActivity.class);
+        intent.putExtra("keyword",editSearch.getText().toString());
+        startActivity(intent);
+    }
     // 검색에 사용될 데이터를 리스트에 추가한다.
     private void settingList(){
         list.add("카페");
