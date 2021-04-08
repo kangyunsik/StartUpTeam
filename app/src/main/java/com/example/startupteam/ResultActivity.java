@@ -45,6 +45,12 @@ public class ResultActivity extends AppCompatActivity {
         r = new URLTh();
         keyword = getString;
         r.start();
+        try {
+            r.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Log.d("test2","aa");
         ListView listView = (ListView)findViewById(R.id.listView);
         myAdapter = new ResultAdapter(this,places);
         listView.setAdapter(myAdapter);
@@ -56,9 +62,12 @@ public class ResultActivity extends AppCompatActivity {
                         Toast.LENGTH_LONG).show();
             }
         });
-        for(int i=0;i<5;i++){
+
+        Log.d("test2","aa");
+
+        /*for(int i=0;i<5;i++){
             Log.d("test2",places.get(i).getPlaceName());
-        }
+        }*/
     }
 
 
