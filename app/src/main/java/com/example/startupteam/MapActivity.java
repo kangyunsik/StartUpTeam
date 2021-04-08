@@ -227,7 +227,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                         data.getStringExtra("road_address_name"),
                         Toast.LENGTH_LONG).show();
                 ((TextView) findViewById(R.id.start_text)).setText(start.getPlaceName());
-                mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(Double.parseDouble(data.getStringExtra("x")),Double.parseDouble(data.getStringExtra("y"))),true);
+                mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(Double.parseDouble(data.getStringExtra("y")),Double.parseDouble(data.getStringExtra("x"))),true);
             }
         }else if(requestCode == GET_STRING_END){
             if(resultCode == RESULT_OK){
@@ -242,7 +242,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                         data.getStringExtra("road_address_name"),
                         Toast.LENGTH_LONG).show();
                 ((TextView) findViewById(R.id.end_text)).setText(end.getPlaceName());
-                mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(Double.parseDouble(end.getX()),Double.parseDouble(end.getY())),true);
+                mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(Double.parseDouble(end.getY()),Double.parseDouble(end.getX())),true);
             }
         }
     }
