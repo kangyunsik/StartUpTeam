@@ -246,7 +246,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
             }
         }
     }
-
+//
     public boolean checkLocationServicesStatus() {
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
