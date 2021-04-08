@@ -63,12 +63,6 @@ public class ResultActivity extends AppCompatActivity {
             }
         });
 
-        Log.d("test2","aa");
-
-        /*for(int i=0;i<5;i++){
-            Log.d("test2",places.get(i).getPlaceName());
-        }*/
-
     }
 
 
