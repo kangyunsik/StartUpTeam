@@ -149,8 +149,21 @@ public class SearchActivity extends AppCompatActivity {
     public void onClickSearch(View v){
         Intent intent = new Intent(getApplicationContext(), ResultActivity.class);
         intent.putExtra("keyword",editSearch.getText().toString());
-        startActivity(intent);
+        startActivityForResult(intent,MapActivity.GET_STRING);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == MapActivity.GET_STRING){
+            if(resultCode == RESULT_OK){
+                setResult(RESULT_OK,data);
+                finish();
+            }
+        }
+    }
+
+
     // 검색에 사용될 데이터를 리스트에 추가한다.
     private void settingList(){
         list.add("카페");

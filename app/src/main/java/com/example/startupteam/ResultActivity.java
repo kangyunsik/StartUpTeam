@@ -1,9 +1,11 @@
 package com.example.startupteam;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -32,68 +34,83 @@ public class ResultActivity extends AppCompatActivity {
     public String getString;
     public String keyword;
     public String str;
-    private ArrayList<Document> places = new ArrayList<Document>();
+    public ArrayList<Document> places;
     ResultAdapter myAdapter;
+    ListView listView;
     URLTh r;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
 
         //리스트뷰
-        getString=getIntent().getStringExtra("keyword");
+        listView = (ListView) findViewById(R.id.listView);
+        places = new ArrayList<Document>();
+        getString = getIntent().getStringExtra("keyword");
         r = new URLTh();
         keyword = getString;
         r.start();
         try {
             r.join();
+            Log.d("test3", "join");
         } catch (InterruptedException e) {
+            Log.d("test2", "errorrrrrrrrrrrrrrr");
             e.printStackTrace();
         }
-        Log.d("test2","aa");
-        ListView listView = (ListView)findViewById(R.id.listView);
-        myAdapter = new ResultAdapter(this,places);
-        listView.setAdapter(myAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        Log.d("test2", Integer.toString(places.size()));
+
+
+        Log.d("test2", "aa");
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView parent, View v, int position, long id){
-                Toast.makeText(getApplicationContext(),
+            public void onItemClick(AdapterView parent, View v, int position, long id) {
+                /*Toast.makeText(getApplicationContext(),
                         myAdapter.getItem(position).getPlaceName(),
-                        Toast.LENGTH_LONG).show();
+                        Toast.LENGTH_LONG).show();*/
+                Intent intent = new Intent();
+                intent.putExtra("road_address_name", myAdapter.getItem(position).getAddressName());
+                intent.putExtra("place_name", myAdapter.getItem(position).getPlaceName());
+                intent.putExtra("x", myAdapter.getItem(position).getX());
+                intent.putExtra("y", myAdapter.getItem(position).getY());
+                setResult(RESULT_OK, intent);
+                finish();
+                //Log.d("test2", myAdapter.getItem(position).getPlaceName());
             }
         });
 
-        Log.d("test2","aa");
-
-        /*for(int i=0;i<5;i++){
-            Log.d("test2",places.get(i).getPlaceName());
-        }*/
 
     }
 
 
-    public void JsonParse(String target){
+    public void JsonParse(String target) {
         try {
             JSONParser jsonParser = new JSONParser();
             JSONObject jsonObj = (JSONObject) jsonParser.parse(target);
             JSONArray memberArray = (JSONArray) jsonObj.get("documents");
 
-            Log.d("test: ","=====Members=====");
-            for(int i=0 ; i<5 ; i++){
-                JSONObject tempObj = (JSONObject) memberArray.get(i);
-                Document set = new Document();
+            Log.d("test: ", "=====Members=====");
+            for (int i = 0; i < 5; i++) {
+                final JSONObject tempObj = (JSONObject) memberArray.get(i);
+                final Document set = new Document();
                 set.setAddressName(tempObj.get("road_address_name").toString());
                 set.setPlaceName(tempObj.get("place_name").toString());
+
                 places.add(set);
-                Log.d("sss",""+(i+1)+"번째 멤버의 이름 : "+places.get(i).getPlaceName());
-                Log.d("sss",""+(i+1)+"번째 멤버의 주소: "+tempObj.get("road_address_name"));
+                Log.d("sss", "" + (i + 1) + "번째 멤버의 이름 : " + places.get(i).getPlaceName());
+                Log.d("sss", "" + (i + 1) + "번째 멤버의 주소: " + tempObj.get("road_address_name"));
+                Log.d("sss", "size : " + Integer.toString(places.size()));
             }
+            myAdapter = new ResultAdapter(this, places);
+            listView.setAdapter(myAdapter);
 
         } catch (ParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
+
     class URLTh extends Thread {
 
         @Override
@@ -123,9 +140,9 @@ public class ResultActivity extends AppCompatActivity {
                     BufferedReader br = new BufferedReader(new InputStreamReader((urlCon.getInputStream()), "UTF-8"));
                     str = br.readLine();
                     Log.d("Suc", str);
-                    runOnUiThread(new Runnable(){
+                    runOnUiThread(new Runnable() {
                         @Override
-                        public void run(){
+                        public void run() {
                             JsonParse(str);
                         }
                     });

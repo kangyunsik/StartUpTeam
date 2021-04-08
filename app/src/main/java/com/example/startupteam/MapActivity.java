@@ -14,8 +14,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import net.daum.android.map.coord.MapCoord;
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapView;
 
@@ -40,7 +43,15 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
     private ViewGroup mapViewContainer;
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSIONS_REQUEST_CODE = 100;
+    public static final int GET_STRING = 10000;
+    public static final int GET_STRING_START = 10001;
+    public static final int GET_STRING_END = 10002;
+    private MapPoint map_point;
+    private Document start;
+    private Document end;
+    GpsTracker gpsTracker;
     String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION};
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,11 +70,25 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
         } else {
             checkRunTimePermission();
         }
+        gpsTracker = new GpsTracker(MapActivity.this);
     }
     public void onClickS(View v){
         Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
-        startActivity(intent);
+        switch(v.getId()){
+            case R.id.start_btn:
+                startActivityForResult(intent,GET_STRING_START);
+                break;
+            case R.id.end_btn:
+                startActivityForResult(intent,GET_STRING_END);
+                break;
+            case R.id.my_btn:
+                mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(gpsTracker.getLatitude(),gpsTracker.getLongitude()),true);
+                //mapView.setMapCenterPoint(map_point,true);
+                break;
+        }
+
     }
+
 
     @Override
     protected void onDestroy() {
@@ -75,6 +100,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
     public void onCurrentLocationUpdate(MapView mapView, MapPoint currentLocation, float accuracyInMeters) {
         MapPoint.GeoCoordinate mapPointGeo = currentLocation.getMapPointGeoCoord();
         Log.i(LOG_TAG, String.format("MapView onCurrentLocationUpdate (%f,%f) accuracy (%f)", mapPointGeo.latitude, mapPointGeo.longitude, accuracyInMeters));
+        map_point = currentLocation;
     }
 
     @Override
@@ -188,6 +214,36 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                     Log.d("@@@", "onActivityResult : GPS 활성화 되있음");
                     checkRunTimePermission();
                 }
+            }
+        }else if(requestCode == GET_STRING_START){
+            if(resultCode == RESULT_OK){
+                if(start == null)
+                    start = new Document();
+                start.setRoadAddressName(data.getStringExtra("road_address_name"));
+                start.setPlaceName(data.getStringExtra("place_name"));
+                start.setX(data.getStringExtra("x"));
+                start.setY(data.getStringExtra("y"));
+
+                Toast.makeText(getApplicationContext(),
+                        data.getStringExtra("road_address_name"),
+                        Toast.LENGTH_LONG).show();
+                //((TextView) findViewById(R.id.start_text)).setText(start.getPlaceName());
+                //mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(Double.parseDouble(data.getStringExtra("x")),Double.parseDouble(data.getStringExtra("y"))),true);
+            }
+        }else if(requestCode == GET_STRING_END){
+            if(resultCode == RESULT_OK){
+                if(end == null)
+                    end = new Document();
+                end.setRoadAddressName(data.getStringExtra("road_address_name"));
+                end.setPlaceName(data.getStringExtra("place_name"));
+                end.setX(data.getStringExtra("x"));
+                end.setY(data.getStringExtra("y"));
+
+                Toast.makeText(getApplicationContext(),
+                        data.getStringExtra("road_address_name"),
+                        Toast.LENGTH_LONG).show();
+                //((TextView) findViewById(R.id.end_text)).setText(end.getPlaceName());
+                //mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(Double.parseDouble(end.getX()),Double.parseDouble(end.getY())),true);
             }
         }
     }
