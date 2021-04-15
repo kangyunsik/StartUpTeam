@@ -52,6 +52,13 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
     GpsTracker gpsTracker;
     String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION};
 
+/*
+    private final static String server_ip = "34.84.111.70";
+*/
+    private final static String server_ip = "127.0.0.1";
+    private final static String server_port = "8080";
+    private final static String server_locate = "locate";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +80,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
         gpsTracker = new GpsTracker(MapActivity.this);
     }
     public void onClickS(View v){
+        Log.d("Suc","s22");
         Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
         switch(v.getId()){
             case R.id.start_btn:
@@ -85,10 +93,62 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(gpsTracker.getLatitude(),gpsTracker.getLongitude()),true);
                 //mapView.setMapCenterPoint(map_point,true);
                 break;
+            case R.id.FButton:
+                Log.d("Suc","s");
+
+                sendToServer();
+                Log.d("Suc","su");
+
+                break;
         }
 
     }
 
+    private void sendToServer(){
+        URLth thread = new URLth();
+        thread.start();
+    }
+
+    private class URLth extends Thread{
+        @Override
+        public void run(){
+            URL url = null;
+            try {
+                url = new URL("http:"+server_ip+":"+server_port+"/"+server_locate);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            HttpURLConnection urlCon = null;
+            try {
+                urlCon = (HttpURLConnection) url.openConnection();
+                urlCon.setRequestMethod("GET");
+                urlCon.setDoInput(true);
+                urlCon.setDoOutput(true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }finally{
+                urlCon.disconnect();
+            }
+            Log.d("Suc","success1");
+            try {
+                if (urlCon.getResponseCode() == 200) {
+                    BufferedReader br = new BufferedReader(new InputStreamReader((urlCon.getInputStream()), "UTF-8"));
+                    String str = br.readLine();
+                    Log.d("Suc",str);
+                    Toast.makeText(MapActivity.this, "rec : " + str, Toast.LENGTH_SHORT).show();
+                    Log.d("Suc","success");
+                } else {
+                    // Error handling code goes here
+                    Log.d("Suc",Integer.toString(urlCon.getResponseCode()));
+                    Log.d("Suc","fail");
+                }
+            } catch (IOException e) {
+                Log.d("Suc","fail2");
+                e.printStackTrace();
+
+            }
+        }
+    }
 
     @Override
     protected void onDestroy() {
