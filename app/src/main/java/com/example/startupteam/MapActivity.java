@@ -27,6 +27,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -52,10 +53,12 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
     GpsTracker gpsTracker;
     String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION};
 
+    URLth_map thread;
+
 /*
     private final static String server_ip = "34.84.111.70";
 */
-    private final static String server_ip = "127.0.0.1";
+    private final static String server_ip = "59.18.147.62";
     private final static String server_port = "8080";
     private final static String server_locate = "locate";
 
@@ -80,7 +83,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
         gpsTracker = new GpsTracker(MapActivity.this);
     }
     public void onClickS(View v){
-        Log.d("Suc","s22");
+        Log.i("Suc","s22");
         Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
         switch(v.getId()){
             case R.id.start_btn:
@@ -94,10 +97,10 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 //mapView.setMapCenterPoint(map_point,true);
                 break;
             case R.id.FButton:
-                Log.d("Suc","s");
+                Log.i("Suc","s");
 
                 sendToServer();
-                Log.d("Suc","su");
+                Log.i("Suc","su");
 
                 break;
         }
@@ -105,14 +108,19 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
     }
 
     private void sendToServer(){
-        URLth thread = new URLth();
+        thread = new URLth_map();
         thread.start();
     }
 
-    private class URLth extends Thread{
+    private class URLth_map extends Thread{
         @Override
         public void run(){
             URL url = null;
+            String result = null;
+            DataOutputStream out;
+            InputStream is;
+            BufferedReader br;
+
             try {
                 url = new URL("http:"+server_ip+":"+server_port+"/"+server_locate);
             } catch (MalformedURLException e) {
@@ -121,31 +129,39 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
             HttpURLConnection urlCon = null;
             try {
                 urlCon = (HttpURLConnection) url.openConnection();
-                urlCon.setRequestMethod("GET");
+                urlCon.setRequestMethod("POST");
                 urlCon.setDoInput(true);
                 urlCon.setDoOutput(true);
+                out = new DataOutputStream(urlCon.getOutputStream());
+
+                String param =
+                        "user_x="+gpsTracker.latitude+
+                        "&user_y="+gpsTracker.longitude+
+                        "&start_x="+start.getX()+
+                        "&start_y="+start.getY()+
+                        "&end_x="+end.getX()+
+                        "&end_y="+end.getY();
+                out.writeBytes(param);
+                Log.i("Suc" ,"write : " +  param);
+                out.flush();
+
+
+                is = urlCon.getInputStream();
+
+                if (urlCon.getResponseCode() == 200) {
+                    br = new BufferedReader(new InputStreamReader((urlCon.getInputStream()), "UTF-8"));
+                    String str = br.readLine();
+                    Log.i("Suc",str);
+
+                } else {
+                    // Error handling code goes here
+                    Log.i("Suc",Integer.toString(urlCon.getResponseCode()));
+                    Log.i("Suc","fail");
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }finally{
                 urlCon.disconnect();
-            }
-            Log.d("Suc","success1");
-            try {
-                if (urlCon.getResponseCode() == 200) {
-                    BufferedReader br = new BufferedReader(new InputStreamReader((urlCon.getInputStream()), "UTF-8"));
-                    String str = br.readLine();
-                    Log.d("Suc",str);
-                    Toast.makeText(MapActivity.this, "rec : " + str, Toast.LENGTH_SHORT).show();
-                    Log.d("Suc","success");
-                } else {
-                    // Error handling code goes here
-                    Log.d("Suc",Integer.toString(urlCon.getResponseCode()));
-                    Log.d("Suc","fail");
-                }
-            } catch (IOException e) {
-                Log.d("Suc","fail2");
-                e.printStackTrace();
-
             }
         }
     }
@@ -200,7 +216,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
             }
 
             if (check_result) {
-                Log.d("@@@", "start");
+                Log.i("@@@", "start");
                 //위치 값을 가져올 수 있음
 
             } else {
@@ -271,7 +287,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
             //사용자가 GPS 활성 시켰는지 검사
             if (checkLocationServicesStatus()) {
                 if (checkLocationServicesStatus()) {
-                    Log.d("@@@", "onActivityResult : GPS 활성화 되있음");
+                    Log.i("@@@", "onActivityResult : GPS 활성화 되있음");
                     checkRunTimePermission();
                 }
             }
@@ -357,48 +373,6 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
     @Override
     public void onMapViewMoveFinished(MapView mapView, MapPoint mapPoint) {
 
-    }
-
-    private class URLTh extends Thread{
-        @Override
-        public void run(){
-            URL url = null;
-            try {
-                url = new URL("https://dapi.kakao.com/v2/local/search/keyword.json?y=37.514322572335935&x=127.06283102249932&radius=20000&query=cafe");
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            HttpURLConnection urlCon = null;
-            try {
-                urlCon = (HttpURLConnection) url.openConnection();
-                urlCon.setRequestProperty("Authorization","KakaoAK 08524df1fb5ba759f2cfd86e83401e49");
-                urlCon.setRequestMethod("GET");
-                urlCon.setDoInput(true);
-                urlCon.setDoOutput(true);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }finally{
-                urlCon.disconnect();
-            }
-            Log.d("Suc","success1");
-            try {
-                if (urlCon.getResponseCode() == 200) {
-                    BufferedReader br = new BufferedReader(new InputStreamReader((urlCon.getInputStream()), "UTF-8"));
-                    String str = br.readLine();
-                    Log.d("Suc",str);
-
-                    Log.d("Suc","success");
-                } else {
-                    // Error handling code goes here
-                    Log.d("Suc",Integer.toString(urlCon.getResponseCode()));
-                    Log.d("Suc","fail");
-                }
-            } catch (IOException e) {
-                Log.d("Suc","fail2");
-                e.printStackTrace();
-
-            }
-        }
     }
 
 }
