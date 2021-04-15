@@ -69,18 +69,30 @@ public class ResultActivity extends AppCompatActivity {
                 /*Toast.makeText(getApplicationContext(),
                         myAdapter.getItem(position).getPlaceName(),
                         Toast.LENGTH_LONG).show();*/
-                Intent intent = new Intent();
-                intent.putExtra("road_address_name", myAdapter.getItem(position).getAddressName());
+                Intent intent = new Intent(getApplicationContext(), Result_popup.class);
+               intent.putExtra("road_address_name", myAdapter.getItem(position).getRoadAddressName());
                 intent.putExtra("place_name", myAdapter.getItem(position).getPlaceName());
                 intent.putExtra("x", myAdapter.getItem(position).getX());
                 intent.putExtra("y", myAdapter.getItem(position).getY());
-                setResult(RESULT_OK, intent);
-                finish();
+                intent.putExtra("phone", myAdapter.getItem(position).getPhone());
+                intent.putExtra("category_name", myAdapter.getItem(position).getCategoryName());
+                intent.putExtra("place_url", myAdapter.getItem(position).getPlaceUrl());
+                intent.putExtra("distance", myAdapter.getItem(position).getDistance());
+                startActivityForResult(intent,1);
                 //Log.d("test2", myAdapter.getItem(position).getPlaceName());
             }
         });
 
 
+    }
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1){
+            if(resultCode == RESULT_OK){
+                setResult(RESULT_OK,data);
+                finish();
+            }
+        }
     }
 
 
@@ -91,17 +103,26 @@ public class ResultActivity extends AppCompatActivity {
             JSONArray memberArray = (JSONArray) jsonObj.get("documents");
 
             Log.d("test: ", "=====Members=====");
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < memberArray.size(); i++) {
                 final JSONObject tempObj = (JSONObject) memberArray.get(i);
                 final Document set = new Document();
-                set.setAddressName(tempObj.get("road_address_name").toString());
+                set.setRoadAddressName(tempObj.get("road_address_name").toString());
                 set.setPlaceName(tempObj.get("place_name").toString());
                 set.setX(tempObj.get("x").toString());
                 set.setY(tempObj.get("y").toString());
+                set.setCategoryName(tempObj.get("category_name").toString());
+                set.setPhone(tempObj.get("phone").toString());
+                set.setPlaceUrl(tempObj.get("place_url").toString());
+                set.setDistance(tempObj.get("distance").toString());
                 places.add(set);
                 Log.d("sss", "" + (i + 1) + "번째 멤버의 이름 : " + places.get(i).getPlaceName());
-                Log.d("sss", "" + (i + 1) + "번째 멤버의 주소: " + tempObj.get("road_address_name"));
+                Log.d("sss", "" + (i + 1) + "번째 멤버의 주소: " + places.get(i).getRoadAddressName());
                 Log.d("sss", "size : " + Integer.toString(places.size()));
+            }
+            if(memberArray.size()==0){
+                Toast.makeText(getApplicationContext(),
+                        "검색결과가 존재하지 않습니다.",
+                        Toast.LENGTH_LONG).show();
             }
             myAdapter = new ResultAdapter(this, places);
             listView.setAdapter(myAdapter);
@@ -119,7 +140,7 @@ public class ResultActivity extends AppCompatActivity {
             URL url = null;
             try {
                 Log.d("textcheck3", keyword);
-                url = new URL("https://dapi.kakao.com/v2/local/search/keyword.json?radius=20000&size=5&query=" + keyword);
+                url = new URL("https://dapi.kakao.com/v2/local/search/keyword.json?radius=20000&size=10&query=" + keyword);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }

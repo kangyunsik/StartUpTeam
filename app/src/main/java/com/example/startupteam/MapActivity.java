@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import net.daum.android.map.coord.MapCoord;
+import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapView;
 
@@ -51,14 +52,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
     private Document end;
     GpsTracker gpsTracker;
     String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION};
-
-/*
-    private final static String server_ip = "34.84.111.70";
-*/
-    private final static String server_ip = "127.0.0.1";
-    private final static String server_port = "8080";
-    private final static String server_locate = "locate";
-
+    MapPOIItem marker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +65,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
         mapViewContainer = findViewById(R.id.map_view);
         mapViewContainer.addView(mapView);
         mapView.setMapViewEventListener(this);
-        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
+       //mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
         if (!checkLocationServicesStatus()) {
             showDialogForLocationServiceSetting();
         } else {
@@ -80,7 +74,6 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
         gpsTracker = new GpsTracker(MapActivity.this);
     }
     public void onClickS(View v){
-        Log.d("Suc","s22");
         Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
         switch(v.getId()){
             case R.id.start_btn:
@@ -91,64 +84,18 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 break;
             case R.id.my_btn:
                 mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(gpsTracker.getLatitude(),gpsTracker.getLongitude()),true);
-                //mapView.setMapCenterPoint(map_point,true);
-                break;
-            case R.id.FButton:
-                Log.d("Suc","s");
-
-                sendToServer();
-                Log.d("Suc","su");
-
+                marker = new MapPOIItem();
+                marker.setItemName("My Location");
+                marker.setTag(0);
+                marker.setMapPoint(MapPoint.mapPointWithGeoCoord(gpsTracker.getLatitude(),gpsTracker.getLongitude()));
+                marker.setMarkerType(MapPOIItem.MarkerType.BluePin); // 기본으로 제공하는 BluePin 마커 모양.
+                marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
+                mapView.addPOIItem(marker);
                 break;
         }
 
     }
 
-    private void sendToServer(){
-        URLth thread = new URLth();
-        thread.start();
-    }
-
-    private class URLth extends Thread{
-        @Override
-        public void run(){
-            URL url = null;
-            try {
-                url = new URL("http:"+server_ip+":"+server_port+"/"+server_locate);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            HttpURLConnection urlCon = null;
-            try {
-                urlCon = (HttpURLConnection) url.openConnection();
-                urlCon.setRequestMethod("GET");
-                urlCon.setDoInput(true);
-                urlCon.setDoOutput(true);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }finally{
-                urlCon.disconnect();
-            }
-            Log.d("Suc","success1");
-            try {
-                if (urlCon.getResponseCode() == 200) {
-                    BufferedReader br = new BufferedReader(new InputStreamReader((urlCon.getInputStream()), "UTF-8"));
-                    String str = br.readLine();
-                    Log.d("Suc",str);
-                    Toast.makeText(MapActivity.this, "rec : " + str, Toast.LENGTH_SHORT).show();
-                    Log.d("Suc","success");
-                } else {
-                    // Error handling code goes here
-                    Log.d("Suc",Integer.toString(urlCon.getResponseCode()));
-                    Log.d("Suc","fail");
-                }
-            } catch (IOException e) {
-                Log.d("Suc","fail2");
-                e.printStackTrace();
-
-            }
-        }
-    }
 
     @Override
     protected void onDestroy() {
