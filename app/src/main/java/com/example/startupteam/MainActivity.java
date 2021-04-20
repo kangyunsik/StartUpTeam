@@ -40,7 +40,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        Intent intent2 = new Intent(this, LoadingActivity.class);
+        startActivity(intent2);
         Checker checker = new Checker();                    // PERMISSION CHECKER THREAD
         checker.start();
 
@@ -49,15 +50,10 @@ public class MainActivity extends AppCompatActivity {
         edit_id.setText("");
 
         Button Btn_SignIn = findViewById(R.id.button_login);
-        Button Btn_SignUp = findViewById(R.id.button_left);
-        Button Btn_PwFind = findViewById(R.id.button_right);
 
-        RadioButton RdBtn_consist = findViewById(R.id.radioButton);
 
         Btn_SignIn.setText("로그인");
-        Btn_SignUp.setText("회원가입");
-        Btn_PwFind.setText("비밀번호 찾기");
-        RdBtn_consist.setText("로그인 상태 유지");
+
 
         Btn_SignIn.setOnClickListener((View v) -> {
             String id = edit_id.getText().toString();
@@ -76,28 +72,6 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-
-        Button test_btn = findViewById(R.id.test_button);
-        test_btn.setOnClickListener((View v)->{
-            Intent intent = new Intent();
-            intent.setData(Uri.parse("kakaomap://route?sp=37.537229,127.005515&ep=37.4979502,127.0276368&by=PUBLICTRANSIT"));
-            startActivity(intent);
-
-        });
-
-        Button test_btn2 = findViewById(R.id.test_button2);
-        test_btn2.setOnClickListener((View v)->{
-            URLTh thread = new URLTh();
-            thread.start();
-
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-
     }
 
     private class URLTh extends Thread{

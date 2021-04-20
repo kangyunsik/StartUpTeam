@@ -50,6 +50,8 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
     private MapPoint map_point;
     private Document start;
     private Document end;
+    private TextView start_text;
+    private TextView end_text;
     GpsTracker gpsTracker;
     String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION};
 
@@ -70,6 +72,8 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
 
         //지도를 띄우자
         // java code
+        start_text = (TextView)findViewById(R.id.start_text);
+        end_text = (TextView)findViewById(R.id.end_text);
         mapView = new MapView(this);
         mapViewContainer = findViewById(R.id.map_view);
         mapViewContainer.addView(mapView);
@@ -97,11 +101,17 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 //mapView.setMapCenterPoint(map_point,true);
                 break;
             case R.id.FButton:
-                Log.i("Suc","s");
-
-                sendToServer();
-                Log.i("Suc","su");
-
+                if(start_text.getText().toString().equals("출발지를 입력하세요")||
+                end_text.getText().toString().equals("도착지를 입력하세요")){
+                    Toast.makeText(getApplicationContext(),
+                            "출발지와 도착지를 먼저 입력하세요.",
+                            Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Log.i("Suc", "s");
+                    sendToServer();
+                    Log.i("Suc", "su");
+                }
                 break;
         }
 

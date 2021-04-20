@@ -67,7 +67,8 @@ public class ResultActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView parent, View v, int position, long id) {
                 /*Toast.makeText(getApplicationContext(),
-                        myAdapter.getItem(position).getPlaceName(),
+                        my
+                        Adapter.getItem(position).getPlaceName(),
                         Toast.LENGTH_LONG).show();*/
                 Intent intent = new Intent(getApplicationContext(), Result_popup.class);
                intent.putExtra("road_address_name", myAdapter.getItem(position).getRoadAddressName());

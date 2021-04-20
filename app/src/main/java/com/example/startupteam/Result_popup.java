@@ -19,6 +19,7 @@ public class Result_popup extends AppCompatActivity {
     String placename;
     String pointx;
     String pointy;
+    String phonenumber;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,14 +39,21 @@ public class Result_popup extends AppCompatActivity {
         roadaddress = getIntent().getStringExtra("road_address_name");
         pointx = getIntent().getStringExtra("x");
         pointy = getIntent().getStringExtra("y");
-        place.setText("장소명 : "+getIntent().getStringExtra("place_name"));
-        road.setText("도로명주소 : "+getIntent().getStringExtra("road_address_name"));
-        phone.setText("전화번호 : "+getIntent().getStringExtra("phone"));
+        phonenumber = getIntent().getStringExtra("phone");
+        place.setText(getIntent().getStringExtra("place_name"));
+        if(roadaddress.equals(""))
+            roadaddress= "알 수 없음";
+        
+        if(phonenumber.equals(""))
+            phonenumber="알 수 없음";
+        road.setText("도로명주소 : "+roadaddress);
+        phone.setText("전화번호 : "+phonenumber);
         category.setText(getIntent().getStringExtra("category_name"));
-        url.setText("URL : "+getIntent().getStringExtra("place_url"));
-        distance.setText("거리 : "+getIntent().getStringExtra("distance"));
-        x.setText("x : "+getIntent().getStringExtra("x"));
-        y.setText("y : "+getIntent().getStringExtra("y"));
+      /*  url.setText("URL : "+getIntent().getStringExtra("place_url"));
+        distance.setText("거리 : "+getIntent().getStringExtra("distance"));*/
+        distance.setText("선택하신 장소가 올바르면 확인을 눌러주세요");
+        //x.setText("x : "+getIntent().getStringExtra("x"));
+       // y.setText("y : "+getIntent().getStringExtra("y"));
     }
     public void onOk(View v){
         Intent intent = new Intent();

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">버스벨알림서비스</string>
+    <string name="app_name">Remarquer</string>
     <string name="radiobutton">RadioButton</string>
     <string name="button">Button</string>
     <string name="kakao_app_key">ca7e97ee9a50826a2ef734e8146020c0</string>

@@ -18,10 +18,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StartUpTeam"
         android:usesCleartextTraffic="true">
+        <activity android:name=".LoadingActivity"
+        android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
         <activity
             android:name=".Result_popup"
             android:label="@string/title_activity_result_popup"
-            android:theme="@style/popupTheme" android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/popupTheme" />
         <activity
             android:name=".ResultActivity"
             android:label="@string/title_activity_result"
