@@ -12,6 +12,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -120,6 +123,31 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
     private void sendToServer(){
         thread = new URLth_map();
         thread.start();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_option, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.menu1:
+                mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
+                Toast.makeText(getApplicationContext(),
+                        "현재 위치를 자동으로 추적합니다.",
+                        Toast.LENGTH_LONG).show();
+                break;
+            case R.id.menu2:
+                mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
+                Toast.makeText(getApplicationContext(),
+                        "위치 추적 모드를 종료합니다",
+                        Toast.LENGTH_LONG).show();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private class URLth_map extends Thread{
