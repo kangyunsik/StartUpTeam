@@ -8,7 +8,7 @@
 
         android:id="@+id/menu1"
 
-        android:title="Tracking Mode on"
+        android:title="Tracking Mode On"
 
         app:showAsAction="never">
 

@@ -149,6 +149,7 @@ public class SearchActivity extends AppCompatActivity {
     public void onClickSearch(View v){
         Intent intent = new Intent(getApplicationContext(), ResultActivity.class);
         intent.putExtra("keyword",editSearch.getText().toString());
+        list.add(editSearch.getText().toString());
         startActivityForResult(intent,MapActivity.GET_STRING);
     }
 

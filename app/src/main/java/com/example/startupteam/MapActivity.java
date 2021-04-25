@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import net.daum.android.map.coord.MapCoord;
+import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapView;
 
@@ -56,6 +57,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
     private TextView start_text;
     private TextView end_text;
     GpsTracker gpsTracker;
+    MapPOIItem st, dest;
     String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION};
 
     URLth_map thread;
@@ -111,6 +113,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                             Toast.LENGTH_LONG).show();
                 }
                 else {
+                    mapView.fitMapViewAreaToShowAllPOIItems();
                     Log.i("Suc", "s");
                     sendToServer();
                     Log.i("Suc", "su");
@@ -143,7 +146,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
             case R.id.menu2:
                 mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
                 Toast.makeText(getApplicationContext(),
-                        "위치 추적 모드를 종료합니다",
+                        "위치 추적 모드를 종료합니다.",
                         Toast.LENGTH_LONG).show();
                 break;
         }
@@ -333,6 +336,8 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
             if(resultCode == RESULT_OK){
                 if(start == null)
                     start = new Document();
+                if(st!=null)
+                    mapView.removePOIItem(st);
                 start.setRoadAddressName(data.getStringExtra("road_address_name"));
                 start.setPlaceName(data.getStringExtra("place_name"));
                 start.setX(data.getStringExtra("x"));
@@ -342,11 +347,21 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                         Toast.LENGTH_LONG).show();
                 ((TextView) findViewById(R.id.start_text)).setText(start.getPlaceName());
                 mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(Double.parseDouble(data.getStringExtra("y")),Double.parseDouble(data.getStringExtra("x"))),true);
+                st = new MapPOIItem();
+                st.setItemName("출발지");
+                st.setTag(0);
+                st.setMapPoint(MapPoint.mapPointWithGeoCoord(Double.parseDouble(data.getStringExtra("y")),Double.parseDouble(data.getStringExtra("x"))));
+                st.setMarkerType(MapPOIItem.MarkerType.BluePin); // 기본으로 제공하는 BluePin 마커 모양.
+                st.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
+                mapView.addPOIItem(st);
+                Log.d("마커","마커찍힘");
             }
         }else if(requestCode == GET_STRING_END){
             if(resultCode == RESULT_OK){
                 if(end == null)
                     end = new Document();
+                if(dest!=null)
+                    mapView.removePOIItem(dest);
                 end.setRoadAddressName(data.getStringExtra("road_address_name"));
                 end.setPlaceName(data.getStringExtra("place_name"));
                 end.setX(data.getStringExtra("x"));
@@ -357,6 +372,13 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                         Toast.LENGTH_LONG).show();
                 ((TextView) findViewById(R.id.end_text)).setText(end.getPlaceName());
                 mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(Double.parseDouble(end.getY()),Double.parseDouble(end.getX())),true);
+                dest = new MapPOIItem();
+                dest.setItemName("도착지");
+                dest.setTag(0);
+                dest.setMapPoint(MapPoint.mapPointWithGeoCoord(Double.parseDouble(end.getY()),Double.parseDouble(end.getX())));
+                dest.setMarkerType(MapPOIItem.MarkerType.BluePin); // 기본으로 제공하는 BluePin 마커 모양.
+                dest.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
+                mapView.addPOIItem(dest);
             }
         }
     }
