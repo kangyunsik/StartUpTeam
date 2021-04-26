@@ -40,8 +40,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Intent intent2 = new Intent(this, LoadingActivity.class);
         startActivity(intent2);
+
         Checker checker = new Checker();                    // PERMISSION CHECKER THREAD
         checker.start();
 
@@ -50,10 +52,6 @@ public class MainActivity extends AppCompatActivity {
         edit_id.setText("");
 
         Button Btn_SignIn = findViewById(R.id.button_login);
-
-
-        Btn_SignIn.setText("로그인");
-
 
         Btn_SignIn.setOnClickListener((View v) -> {
             String id = edit_id.getText().toString();
@@ -71,6 +69,14 @@ public class MainActivity extends AppCompatActivity {
             }else{
                 finish();
             }
+        });
+
+        Button Btn_SignUp = findViewById(R.id.button_sign);
+
+        Btn_SignUp.setOnClickListener((View v) -> {
+            SignUp_Dialog oDialog = new SignUp_Dialog(this);
+            oDialog.setCancelable(false);
+            oDialog.show();
         });
     }
 

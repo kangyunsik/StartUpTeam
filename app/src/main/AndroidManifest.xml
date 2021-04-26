@@ -48,7 +48,7 @@
         </activity> <!-- API KEY -->
         <meta-data
             android:name="com.kakao.sdk.AppKey"
-            android:value="97e75e6cdeee669279a76fdcf5bf79d6" />
+            android:value="ca7e97ee9a50826a2ef734e8146020c0" />
     </application>
 
 </manifest>
