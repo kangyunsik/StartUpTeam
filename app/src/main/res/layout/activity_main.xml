@@ -81,4 +81,22 @@
         android:background="@drawable/rounded_button"
         android:text="Sign Up"/>
 
+    <android.widget.Button
+        android:id="@+id/button_find"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:layout_alignTop="@+id/button_login"
+        android:layout_alignEnd="@+id/edit_pw"
+        android:layout_alignRight="@+id/edit_pw"
+        android:layout_alignBottom="@+id/button_login"
+        android:layout_marginTop="87dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginRight="1dp"
+        android:layout_marginBottom="-87dp"
+        android:background="@drawable/rounded_text"
+        android:backgroundTint="#C7C9CA"
+        android:text="find password"
+        android:ems="10"
+        android:textColor="@color/white" />
+
 </RelativeLayout>

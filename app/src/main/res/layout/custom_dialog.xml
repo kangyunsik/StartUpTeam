@@ -20,7 +20,7 @@
             android:layout_height="match_parent">
 
             <EditText
-                android:id="@+id/edit_id2"
+                android:id="@+id/edit_customD_id"
                 android:layout_width="300dp"
                 android:layout_height="40dp"
                 android:layout_below="@+id/linearLayout"
@@ -31,14 +31,14 @@
                 android:hint="username"
                 android:inputType="textPersonName"
                 android:paddingStart="20dp"
-                app:layout_constraintBottom_toTopOf="@+id/edit_pw2"
+                app:layout_constraintBottom_toTopOf="@+id/edit_customD_pw"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.508"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView" />
 
             <EditText
-                android:id="@+id/edit_pw2"
+                android:id="@+id/edit_customD_pw"
                 android:layout_width="300dp"
                 android:layout_height="40dp"
                 android:layout_below="@+id/edit_id"
@@ -48,11 +48,30 @@
                 android:hint="password"
                 android:inputType="textPassword"
                 android:paddingStart="20dp"
-                app:layout_constraintBottom_toTopOf="@+id/button_customD_signup"
+                app:layout_constraintBottom_toTopOf="@+id/edit_customD_email"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.491"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.876" />
+
+            <EditText
+                android:id="@+id/edit_customD_email"
+                android:layout_width="300dp"
+                android:layout_height="40dp"
+                android:layout_below="@+id/edit_id"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/rounded_text"
+                android:ems="10"
+                android:hint="email(should contains '@')"
+                android:inputType="textEmailAddress"
+                android:paddingStart="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.508"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.424" />
 
             <TextView
                 android:id="@+id/textView"
@@ -60,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:text="SignUp"
                 android:textSize="30sp"
-                app:layout_constraintBottom_toTopOf="@+id/button_customD_signup"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.501"
                 app:layout_constraintStart_toStartOf="parent"
@@ -74,32 +93,48 @@
                 android:text="SignUp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.215"
+                app:layout_constraintHorizontal_bias="0.208"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.932" />
+                app:layout_constraintVertical_bias="0.601" />
 
             <Button
                 android:id="@+id/button_customD_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cancle"
+                android:text="Cancel"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.787"
+                app:layout_constraintHorizontal_bias="0.788"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.932" />
+                app:layout_constraintVertical_bias="0.599" />
 
-            <Button
-                android:id="@+id/button_customD_find"
+            <android.widget.Button
+                android:id="@+id/button_customD_googleLogin"
                 android:layout_width="245dp"
-                android:layout_height="wrap_content"
-                android:text="Find Password"
-                app:layout_constraintBottom_toTopOf="@+id/button_customD_signup"
+                android:layout_height="53dp"
+                android:background="@drawable/google_button"
+                android:padding="0dp"
+                android:src="@drawable/google_button"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_pw2" />
+                app:layout_constraintTop_toBottomOf="@+id/edit_customD_pw"
+                app:layout_constraintVertical_bias="0.868" />
+
+            <android.widget.Button
+                android:id="@+id/button_customD_kakaoLogin"
+                android:layout_width="245dp"
+                android:layout_height="53dp"
+                android:background="@drawable/kakao"
+                android:padding="0dp"
+                android:src="@drawable/google_button"
+                app:layout_constraintBottom_toTopOf="@+id/button_customD_googleLogin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button_customD_signup"
+                app:layout_constraintVertical_bias="0.72" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </FrameLayout>
