@@ -34,6 +34,9 @@
             android:label="@string/title_activity_search"
             android:theme="@style/Theme.StartUpTeam.NoActionBar" />
 
+        <service
+            android:name=".ServerCommunicator"
+            android:label=".ServerCommunicator"/>
         <meta-data
             android:name="com.google.android.wearable.standalone"
             android:value="true" />

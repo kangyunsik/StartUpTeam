@@ -6,11 +6,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Handler;
+import android.os.Messenger;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,6 +46,18 @@ import java.net.URL;
 
 
 public class MapActivity extends AppCompatActivity implements MapView.CurrentLocationEventListener, MapView.MapViewEventListener {
+    private Handler handler = new Handler((message)-> {
+        Object path = message.obj;
+        if (message.arg1 == RESULT_OK && path != null) {
+            Toast.makeText(getApplicationContext(),
+                    "[" + path.toString() + "]", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(getApplicationContext(),
+                    " " + path.toString(), Toast.LENGTH_LONG).show();
+        }
+        return false;
+    });
+
 
     private static final String LOG_TAG = "MapActivity";
     private MapView mapView;
@@ -62,10 +78,8 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
 
     URLth_map thread;
 
-/*
     private final static String server_ip = "34.84.111.70";
-*/
-    private final static String server_ip = "59.18.147.62";
+    //private final static String server_ip = "59.18.147.62";
     private final static String server_port = "8080";
     private final static String server_locate = "locate";
 
@@ -93,12 +107,16 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
     }
     public void onClickS(View v){
         Log.i("Suc","s22");
-        Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
+
+        Intent intent;
+
         switch(v.getId()){
             case R.id.start_btn:
+                intent = new Intent(getApplicationContext(), SearchActivity.class);
                 startActivityForResult(intent,GET_STRING_START);
                 break;
             case R.id.end_btn:
+                intent = new Intent(getApplicationContext(), SearchActivity.class);
                 startActivityForResult(intent,GET_STRING_END);
                 break;
             case R.id.my_btn:
@@ -106,6 +124,17 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 //mapView.setMapCenterPoint(map_point,true);
                 break;
             case R.id.FButton:
+
+                Intent scIntent = new Intent(this,ServerCommunicator.class);
+                String scURL = "http://" + server_ip + ":"+server_port+"/locateupdate";
+                Messenger messenger = new Messenger(handler);
+                scIntent.putExtra("MESSENGER",messenger);
+                scIntent.putExtra("uripath",scURL);
+                scIntent.setData(Uri.parse(scURL));
+                startService(scIntent);
+                Log.i("Suc","s55");
+
+
                 if(start_text.getText().toString().equals("출발지를 입력하세요")||
                 end_text.getText().toString().equals("도착지를 입력하세요")){
                     Toast.makeText(getApplicationContext(),
