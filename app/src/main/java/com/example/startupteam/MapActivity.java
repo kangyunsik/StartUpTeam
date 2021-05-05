@@ -43,6 +43,7 @@ import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 
 public class MapActivity extends AppCompatActivity implements MapView.CurrentLocationEventListener, MapView.MapViewEventListener {
@@ -67,6 +68,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
     public static final int GET_STRING = 10000;
     public static final int GET_STRING_START = 10001;
     public static final int GET_STRING_END = 10002;
+    public static final int GET_STRING_BUS = 10003;
     private MapPoint map_point;
     private Document start;
     private Document end;
@@ -124,16 +126,8 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 //mapView.setMapCenterPoint(map_point,true);
                 break;
             case R.id.FButton:
-
-                Intent scIntent = new Intent(this,ServerCommunicator.class);
-                String scURL = "http://" + server_ip + ":"+server_port+"/locateupdate";
-                Messenger messenger = new Messenger(handler);
-                scIntent.putExtra("MESSENGER",messenger);
-                scIntent.putExtra("uripath",scURL);
-                scIntent.setData(Uri.parse(scURL));
-                startService(scIntent);
-                Log.i("Suc","s55");
-
+                //serviceStart();
+                busActivityStart();
 
                 if(start_text.getText().toString().equals("출발지를 입력하세요")||
                 end_text.getText().toString().equals("도착지를 입력하세요")){
@@ -150,6 +144,26 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 break;
         }
 
+    }
+
+    // Server로 지속적으로 위치 전송하는 서비스 시작하는 메소드.
+    public void serviceStart(){
+        Intent intent = new Intent(this,ServerCommunicator.class);
+        String scURL = "http://" + server_ip + ":"+server_port+"/locateupdate";
+        Messenger messenger = new Messenger(handler);
+        intent.putExtra("MESSENGER",messenger);
+        intent.putExtra("uripath",scURL);
+        intent.setData(Uri.parse(scURL));
+        startService(intent);
+    }
+
+    // BUS Activity 시작.
+    public void busActivityStart(){
+        Intent intent = new Intent(this,BusActivity.class);
+        intent.putExtra("start_point",start);
+        intent.putExtra("end_point",end);
+        Log.i("생성","진행");
+        startActivityForResult(intent,GET_STRING_BUS);
     }
 
     private void sendToServer(){
@@ -408,6 +422,24 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 dest.setMarkerType(MapPOIItem.MarkerType.BluePin); // 기본으로 제공하는 BluePin 마커 모양.
                 dest.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
                 mapView.addPOIItem(dest);
+            }
+        }else if(requestCode == GET_STRING_BUS){
+            if(requestCode == RESULT_OK){
+
+                //  nm      : 경로 번호.
+                //  route   : bus번호 or 도보 여부
+                //  time    : 각각의 시간 소요 list. route list와 index가 같음.
+
+                String nm = data.getStringExtra("routeNm");
+                ArrayList<String> route = (ArrayList<String>)data.getSerializableExtra("busInfo");
+                ArrayList<String> time = (ArrayList<String>)data.getSerializableExtra("busInfo");
+
+                Log.i("테스트",nm);
+                Log.i("테스트",route+" ");
+                Log.i("테스트",time+" ");
+
+                Toast.makeText(this,"rtnm info : " + nm,Toast.LENGTH_LONG);
+                // contents.
             }
         }
     }

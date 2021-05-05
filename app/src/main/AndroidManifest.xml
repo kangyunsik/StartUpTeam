@@ -26,6 +26,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/popupTheme" />
         <activity
+            android:name=".Bus_popup"
+            android:label="Bus_popup"
+            android:screenOrientation="portrait"
+            android:theme="@style/popupTheme" />
+        <activity
             android:name=".ResultActivity"
             android:label="@string/title_activity_result"
             android:theme="@style/Theme.StartUpTeam.NoActionBar" />
@@ -33,10 +38,16 @@
             android:name=".SearchActivity"
             android:label="@string/title_activity_search"
             android:theme="@style/Theme.StartUpTeam.NoActionBar" />
+        <activity
+            android:name=".BusActivity"
+            android:label="BusActivity"
+            android:theme="@style/Theme.StartUpTeam.NoActionBar" />
 
         <service
             android:name=".ServerCommunicator"
             android:label=".ServerCommunicator"/>
+
+
         <meta-data
             android:name="com.google.android.wearable.standalone"
             android:value="true" />
@@ -48,10 +59,17 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> <!-- API KEY -->
+        </activity>
+
+
+        <!-- API KEY -->
+        <!--<meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="ca7e97ee9a50826a2ef734e8146020c0" />-->
+
         <meta-data
             android:name="com.kakao.sdk.AppKey"
-            android:value="ca7e97ee9a50826a2ef734e8146020c0" />
+            android:value="97e75e6cdeee669279a76fdcf5bf79d6" />
     </application>
 
 </manifest>
