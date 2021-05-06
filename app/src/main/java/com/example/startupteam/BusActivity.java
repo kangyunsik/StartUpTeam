@@ -112,14 +112,15 @@ public class BusActivity extends AppCompatActivity {
     class URLth_bus implements Runnable{
         @Override
         public void run() {
-            String uriPath = MapActivity.server_ip +":"+ MapActivity.server_port + "/"+server_locate;
+            String uriPath = "http:"+MapActivity.server_ip +":"+ MapActivity.server_port + "/"+server_locate;
 
             HttpURLConnection con = null;
             InputStream is = null;
             BufferedReader br = null;
 
-            /*try {
+            try {
                 //finalURL = uriPath + "?x=" + gpsTracker.getLatitude() + "&y=" + gpsTracker.getLongitude();
+                Log.i("Suc",uriPath);
                 URL url = new URL(uriPath);
                 con = (HttpURLConnection) url.openConnection();
                 con.setRequestMethod("GET");
@@ -129,26 +130,23 @@ public class BusActivity extends AppCompatActivity {
                 is = con.getInputStream();
                 br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
                 String result;
-                while ((result = br.readLine()) != null) {
-                    Log.i("Suc", "!" + result + "!");
-                }
+                result = br.readLine();
+                Log.i("Suc", "!" + result + "!");
+
                 myParse(result);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
-            }*/
+            }
 
-            routes = new ArrayList<>();
+            /*routes = new ArrayList<>();
             String result = "1시간39<total> 1정류장전(약1분)<left> 4분<time> 0<busnum> 0<station> 17분<time> 643<busnum> 낙성대입구<station> 6분<time> 0<busnum> 0<station> 45분<time> 148<busnum> 방배동삼호아파트<station> 24분<time> 173<busnum> 숭례초등학교<station> 3분<time> 0<busnum> 0<station> 광운대역<last>1시간39<total> 6정류장전(약10분)<left> 4분<time> 0<busnum> 0<station> 17분<time> 5524<busnum> 낙성대입구<station> 6분<time> 0<busnum> 0<station> 45분<time> 148<busnum> 방배동삼호아파트<station> 24분<time> 173<busnum> 숭례초등학교<station> 3분<time> 0<busnum> 0<station> 광운대역<last>1시간45<total> 1정류장전(약1분)<left> 4분<time> 0<busnum> 0<station> 17분<time> 643<busnum> 낙성대입구<station> 6분<time> 0<busnum> 0<station> 51분<time> 148<busnum> 방배동삼호아파트<station> 5분<time> 0<busnum> 0<station> 18분<time> 1137<busnum> 송중동경남아너스빌정문<station> 4분<time> 0<busnum> 0<station> 월계삼거리<last>1시간45<total> 6정류장전(약10분)<left> 4분<time> 0<busnum> 0<station> 17분<time> 5524<busnum> 낙성대입구<station> 6분<time> 0<busnum> 0<station> 51분<time> 148<busnum> 방배동삼호아파트<station> 5분<time> 0<busnum> 0<station> 18분<time> 1137<busnum> 송중동경남아너스빌정문<station> 4분<time> 0<busnum> 0<station> 월계삼거리<last>1시간46<total> 6정류장전(약10분)<left> 4분<time> 0<busnum> 0<station> 17분<time> 5524<busnum> 낙성대입구<station> 6분<time> 0<busnum> 0<station> 51분<time> 148<busnum> 방배동삼호아파트<station> 7분<time> 0<busnum> 0<station> 17분<time> 1017<busnum> 창문여고<station> 4분<time> 0<busnum> 0<station> 월계삼거리<last>";
-            myParse(result);
+            myParse(result);*/
         }
     }
 
     public void myParse(String in){
-        in.replace("[","");
-        in.replace("]","");
-
         String[] strings = in.split(",");
         for(String s : strings){
             mySubParse(s);
@@ -156,8 +154,9 @@ public class BusActivity extends AppCompatActivity {
     }
 
     public void mySubParse(String in){
-        in.replace("\"","");
-        in.replace("\"","");
+        in = in.replaceAll("환승","");
+        in = in.replaceAll("\"","");
+
         String arg = in.split("<")[0];
         if(in.contains("<total>")){
             Route rt = new Route();

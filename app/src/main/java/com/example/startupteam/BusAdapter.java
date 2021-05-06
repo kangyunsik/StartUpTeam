@@ -50,8 +50,11 @@ public class BusAdapter extends BaseAdapter {
 
         routeView.setText(routes.get(position).getRoute_nm());
 
-        for(String s : routes.get(position).getBusInfo())
-            busInfo += s+"    \t\t";
+        for(String s : routes.get(position).getBusInfo()) {
+            if(s.equals("0"))
+                s = "도보";
+            busInfo += s + "    \t\t";
+        }
         wayView.setText(busInfo);
 
         for(String s : routes.get(position).getTimeInfo())

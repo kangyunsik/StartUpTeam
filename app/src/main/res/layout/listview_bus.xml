@@ -48,6 +48,12 @@
                 android:textColor="@android:color/darker_gray"
                 android:textColorHighlight="@color/purple_700"
                 android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView" />
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
