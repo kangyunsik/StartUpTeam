@@ -30,7 +30,7 @@ public class ServerCommunicator extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent){
         //Uri data = intent.getData();
-        Log.i("Suc","start");
+        String id = intent.getStringExtra("id");
         String uriPath = intent.getStringExtra("uripath");
 
         String finalURL;
@@ -64,7 +64,7 @@ public class ServerCommunicator extends IntentService {
                 e.printStackTrace();
             }
             try {
-                finalURL = uriPath + "?x=" + gpsTracker.getLatitude() + "&y=" + gpsTracker.getLongitude();
+                finalURL = uriPath + "?x=" + gpsTracker.getLatitude() + "&y=" + gpsTracker.getLongitude() +"&id="+id;
                 URL url = new URL(finalURL);
                 con = (HttpURLConnection) url.openConnection();
                 con.setRequestMethod("GET");

@@ -36,10 +36,12 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), MapActivity.class);     // After Sign in, Straight to Next Activity.
                 intent.putExtra("id", id);
                 startActivity(intent);
+                Toast.makeText(this, id + "님, 환영합니다.", Toast.LENGTH_LONG).show();
+
             } else if (((String) path).equals("FAIL")) {
-                Toast.makeText(this, "서버로부터 로그인 인증을 실패했습니다.", Toast.LENGTH_LONG);
+                Toast.makeText(this, "서버로부터 로그인 인증을 실패했습니다.", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(this, "서버로부터 잘못된 응답을 받았습니다.", Toast.LENGTH_LONG);
+                Toast.makeText(this, "서버로부터 잘못된 응답을 받았습니다.", Toast.LENGTH_LONG).show();
             }
 
 

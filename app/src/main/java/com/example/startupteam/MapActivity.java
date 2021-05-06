@@ -59,7 +59,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
         return false;
     });
 
-
+    private String id;
     private static final String LOG_TAG = "MapActivity";
     private MapView mapView;
     private ViewGroup mapViewContainer;
@@ -89,6 +89,8 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
+        id = getIntent().getStringExtra("id");
 
         //지도를 띄우자
         // java code
@@ -147,15 +149,28 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
         Messenger messenger = new Messenger(handler);
         intent.putExtra("MESSENGER",messenger);
         intent.putExtra("uripath",scURL);
+        intent.putExtra("id",id);
         intent.setData(Uri.parse(scURL));
         startService(intent);
     }
 
     // BUS Activity 시작.
     public void busActivityStart(){
+
+        //      TEST CODE
+        if(start == null){
+            start = new Document();
+            start.setX("127.11704645705142");
+            start.setY("37.27545287699772");
+            end = new Document();
+            end.setX("127.04366229466967");
+            end.setY("37.28305700556231");
+        }
+        //      TEST CODE
+
         Intent intent = new Intent(this,BusActivity.class);
-        intent.putExtra("start_point",start);
-        intent.putExtra("end_point",end);
+        intent.putExtra("start",start);
+        intent.putExtra("end",end);
         Log.i("생성","진행");
         startActivityForResult(intent,GET_STRING_BUS);
     }

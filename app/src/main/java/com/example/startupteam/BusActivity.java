@@ -27,6 +27,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -35,6 +37,7 @@ import java.util.ArrayList;
 public class BusActivity extends AppCompatActivity {
     private Document start_point;
     private Document end_point;
+
     private ArrayList<Route> routes;
     private BusAdapter myAdapter;
     private ListView listView;
@@ -43,39 +46,23 @@ public class BusActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        Log.i("생성","0");
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bus);
 
-        Log.i("생성","1");
+        start_point = getIntent().getParcelableExtra("start");
+        end_point = getIntent().getParcelableExtra("end");
 
         routes = new ArrayList<>();
-
         settingRoutes();
 
         myAdapter = new BusAdapter(this,routes);
         listView = (ListView) findViewById(R.id.listView_bus);
         listView.setAdapter(myAdapter);
 
-        Log.i("생성","2");
-
-        start_point = getIntent().getParcelableExtra("start_point");
-        end_point = getIntent().getParcelableExtra("end_point");
-
-        //keyword = getString;
-
-
-
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView parent, View v, int position, long id) {
-
-                //Intent intent = new Intent(getApplicationContext(), Bus_popup.class);
-                //intent.putExtra("road_address_name", myAdapter.getItem(position).getRoadAddressName());
-                //startActivityForResult(intent,1);
                 Intent intent = new Intent(getApplicationContext(), Bus_popup.class);
                 intent.putExtra("routeNm", myAdapter.getItem(position).getRoute_nm());
                 intent.putExtra("busInfo", myAdapter.getItem(position).getBusInfo());
@@ -96,9 +83,6 @@ public class BusActivity extends AppCompatActivity {
     }
 
     public void settingRoutes(){
-        //                                    testSetting();  // 하드코딩. TEST용도.
-        //  ==========      == SERVER랑 통신해서 ROUTE 갖고오는 코드 구현 필요  ================
-
         URLth_bus urlth_bus = new URLth_bus();
         Thread thread = new Thread(urlth_bus);
         thread.start();
@@ -113,25 +97,42 @@ public class BusActivity extends AppCompatActivity {
         @Override
         public void run() {
             String uriPath = "http:"+MapActivity.server_ip +":"+ MapActivity.server_port + "/"+server_locate;
+            String sendMsg = "";
+            String result="";
 
             HttpURLConnection con = null;
             InputStream is = null;
+            OutputStream os = null;
             BufferedReader br = null;
 
             try {
-                //finalURL = uriPath + "?x=" + gpsTracker.getLatitude() + "&y=" + gpsTracker.getLongitude();
-                Log.i("Suc",uriPath);
                 URL url = new URL(uriPath);
                 con = (HttpURLConnection) url.openConnection();
                 con.setRequestMethod("GET");
                 con.setDoInput(true);
                 con.setDoOutput(true);
 
-                is = con.getInputStream();
-                br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-                String result;
-                result = br.readLine();
-                Log.i("Suc", "!" + result + "!");
+                os = con.getOutputStream();
+
+                OutputStreamWriter osw;
+                osw = new OutputStreamWriter(os);
+                sendMsg =   "start_x="  + start_point.getX() +
+                            "&start_y=" + start_point.getY() +
+                            "&end_x="   + end_point.getX()   +
+                            "&end_y="   + end_point.getY();
+                osw.write(sendMsg);
+                osw.flush();
+
+                // jsp와 통신이 잘 되고, 서버에서 보낸 값 받음.
+                if (con.getResponseCode() == con.HTTP_OK) {
+                    InputStreamReader tmp = new InputStreamReader(con.getInputStream(), "UTF-8");
+                    br = new BufferedReader(tmp);
+
+                    StringBuffer buffer = new StringBuffer();
+                    result = br.readLine();
+                } else {    // 통신이 실패한 이유를 찍기위한 로그
+                    Log.i("통신 결과", con.getResponseCode() + "에러");
+                }
 
                 myParse(result);
             } catch (MalformedURLException e) {
@@ -180,39 +181,6 @@ public class BusActivity extends AppCompatActivity {
             }
             routes.get(routes.size()-1).getBusStation().add(arg);
         }
-    }
-
-    public void testSetting(){
-        Route rt1 = new Route();
-        Route rt2 = new Route();
-        ArrayList<String> rt1_busInfo = new ArrayList<>(),rt1_timeInfo= new ArrayList<>(),rt2_busInfo= new ArrayList<>(),rt2_timeInfo= new ArrayList<>();
-
-
-        rt1_busInfo.add("66번");
-        rt1_busInfo.add("도보");
-        rt1_busInfo.add("10번");
-        rt1_timeInfo.add("12분");
-        rt1_timeInfo.add("3분");
-        rt1_timeInfo.add("15분");
-
-        rt2_busInfo.add("66-4번");
-        rt2_busInfo.add("도보");
-        rt2_busInfo.add("25번");
-        rt2_timeInfo.add("10분");
-        rt2_timeInfo.add("5분");
-        rt2_timeInfo.add("21분");
-
-
-        rt1.setRoute_nm("1");
-        rt1.setBusInfo(rt1_busInfo);
-        rt1.setTimeInfo(rt1_timeInfo);
-        rt2.setRoute_nm("2");
-        rt2.setBusInfo(rt2_busInfo);
-        rt2.setTimeInfo(rt2_timeInfo);
-
-
-        routes.add(rt1);
-        routes.add(rt2);
     }
 }
 
