@@ -58,7 +58,8 @@ public class ServerCommunicator extends IntentService {
 
         while(true) {
             try {
-                Thread.sleep(1500);
+                Thread.sleep(3000);
+                gpsTracker.getLocation();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
