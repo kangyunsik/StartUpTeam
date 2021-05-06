@@ -126,7 +126,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 //mapView.setMapCenterPoint(map_point,true);
                 break;
             case R.id.FButton:
-                //serviceStart();
+                serviceStart();
                 busActivityStart();
 
                 if(start_text.getText().toString().equals("출발지를 입력하세요")||
