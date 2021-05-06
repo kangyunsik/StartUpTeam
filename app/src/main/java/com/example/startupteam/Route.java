@@ -13,6 +13,22 @@ public class Route implements Parcelable {
     @Expose
     private String route_nm;
 
+    @SerializedName("totalTime")
+    @Expose
+    private String totalTime;
+
+    @SerializedName("leftTime")
+    @Expose
+    private String leftTime;
+
+    @SerializedName("lastStation")
+    @Expose
+    private String lastStation;
+
+    @SerializedName("busStation")
+    @Expose
+    private ArrayList<String> busStation;
+
     @SerializedName("busInfo")
     @Expose
     private ArrayList<String> busInfo;
@@ -34,6 +50,22 @@ public class Route implements Parcelable {
         return timeInfo;
     }
 
+    public String getTotalTime() {
+        return totalTime;
+    }
+
+    public String getLeftTime() {
+        return leftTime;
+    }
+
+    public String getLastStation() {
+        return lastStation;
+    }
+
+    public ArrayList<String> getBusStation() {
+        return busStation;
+    }
+
     public void setRoute_nm(String route_nm) {
         this.route_nm = route_nm;
     }
@@ -46,6 +78,21 @@ public class Route implements Parcelable {
         this.timeInfo = timeInfo;
     }
 
+    public void setTotalTime(String totalTime) {
+        this.totalTime = totalTime;
+    }
+
+    public void setLeftTime(String leftTime) {
+        this.leftTime = leftTime;
+    }
+
+    public void setLastStation(String lastStation) {
+        this.lastStation = lastStation;
+    }
+
+    public void setBusStation(ArrayList<String> busStation) {
+        this.busStation = busStation;
+    }
 
     protected Route() {
         //busInfo = new ArrayList<>();
@@ -54,8 +101,12 @@ public class Route implements Parcelable {
 
     protected Route(Parcel in) {
         route_nm = in.readString();
+        totalTime = in.readString();
+        leftTime = in.readString();
+        lastStation = in.readString();
         busInfo = in.createStringArrayList();
         timeInfo = in.createStringArrayList();
+        busStation = in.createStringArrayList();
     }
 
     public static final Creator<Route> CREATOR = new Creator<Route>() {
@@ -73,8 +124,12 @@ public class Route implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(route_nm);
+        dest.writeString(totalTime);
+        dest.writeString(leftTime);
+        dest.writeString(lastStation);
         dest.writeStringList(busInfo);
         dest.writeStringList(timeInfo);
+        dest.writeStringList(busStation);
     }
 
     @Override

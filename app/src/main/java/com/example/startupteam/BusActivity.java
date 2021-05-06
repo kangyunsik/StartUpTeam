@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -38,7 +39,7 @@ public class BusActivity extends AppCompatActivity {
     private BusAdapter myAdapter;
     private ListView listView;
     public static final int GET_BUS_RTNM = 9999;
-
+    public static final String server_locate = "getRoute";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,37 +96,91 @@ public class BusActivity extends AppCompatActivity {
     }
 
     public void settingRoutes(){
-                                            testSetting();  // 하드코딩. TEST용도.
+        //                                    testSetting();  // 하드코딩. TEST용도.
         //  ==========      == SERVER랑 통신해서 ROUTE 갖고오는 코드 구현 필요  ================
 
-        /*String uriPath = intent.getStringExtra("uripath");
-
-        String finalURL;
-
-        HttpURLConnection con = null;
-        InputStream is = null;
-        BufferedReader br = null;
-
+        URLth_bus urlth_bus = new URLth_bus();
+        Thread thread = new Thread(urlth_bus);
+        thread.start();
         try {
-            finalURL = uriPath + "?x=" + gpsTracker.getLatitude() + "&y=" + gpsTracker.getLongitude();
-            URL url = new URL(finalURL);
-            con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("GET");
-            con.setDoInput(true);
-            con.setDoOutput(true);
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
-            is = con.getInputStream();
-            br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-            String result;
-            while ((result = br.readLine()) != null) {
-                Log.i("Suc", "[" + result + "]");
+    class URLth_bus implements Runnable{
+        @Override
+        public void run() {
+            String uriPath = MapActivity.server_ip +":"+ MapActivity.server_port + "/"+server_locate;
+
+            HttpURLConnection con = null;
+            InputStream is = null;
+            BufferedReader br = null;
+
+            /*try {
+                //finalURL = uriPath + "?x=" + gpsTracker.getLatitude() + "&y=" + gpsTracker.getLongitude();
+                URL url = new URL(uriPath);
+                con = (HttpURLConnection) url.openConnection();
+                con.setRequestMethod("GET");
+                con.setDoInput(true);
+                con.setDoOutput(true);
+
+                is = con.getInputStream();
+                br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+                String result;
+                while ((result = br.readLine()) != null) {
+                    Log.i("Suc", "!" + result + "!");
+                }
+                myParse(result);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }*/
+
+            routes = new ArrayList<>();
+            String result = "1시간39<total> 1정류장전(약1분)<left> 4분<time> 0<busnum> 0<station> 17분<time> 643<busnum> 낙성대입구<station> 6분<time> 0<busnum> 0<station> 45분<time> 148<busnum> 방배동삼호아파트<station> 24분<time> 173<busnum> 숭례초등학교<station> 3분<time> 0<busnum> 0<station> 광운대역<last>1시간39<total> 6정류장전(약10분)<left> 4분<time> 0<busnum> 0<station> 17분<time> 5524<busnum> 낙성대입구<station> 6분<time> 0<busnum> 0<station> 45분<time> 148<busnum> 방배동삼호아파트<station> 24분<time> 173<busnum> 숭례초등학교<station> 3분<time> 0<busnum> 0<station> 광운대역<last>1시간45<total> 1정류장전(약1분)<left> 4분<time> 0<busnum> 0<station> 17분<time> 643<busnum> 낙성대입구<station> 6분<time> 0<busnum> 0<station> 51분<time> 148<busnum> 방배동삼호아파트<station> 5분<time> 0<busnum> 0<station> 18분<time> 1137<busnum> 송중동경남아너스빌정문<station> 4분<time> 0<busnum> 0<station> 월계삼거리<last>1시간45<total> 6정류장전(약10분)<left> 4분<time> 0<busnum> 0<station> 17분<time> 5524<busnum> 낙성대입구<station> 6분<time> 0<busnum> 0<station> 51분<time> 148<busnum> 방배동삼호아파트<station> 5분<time> 0<busnum> 0<station> 18분<time> 1137<busnum> 송중동경남아너스빌정문<station> 4분<time> 0<busnum> 0<station> 월계삼거리<last>1시간46<total> 6정류장전(약10분)<left> 4분<time> 0<busnum> 0<station> 17분<time> 5524<busnum> 낙성대입구<station> 6분<time> 0<busnum> 0<station> 51분<time> 148<busnum> 방배동삼호아파트<station> 7분<time> 0<busnum> 0<station> 17분<time> 1017<busnum> 창문여고<station> 4분<time> 0<busnum> 0<station> 월계삼거리<last>";
+            myParse(result);
+        }
+    }
+
+    public void myParse(String in){
+        in.replace("[","");
+        in.replace("]","");
+
+        String[] strings = in.split(",");
+        for(String s : strings){
+            mySubParse(s);
+        }
+    }
+
+    public void mySubParse(String in){
+        in.replace("\"","");
+        in.replace("\"","");
+        String arg = in.split("<")[0];
+        if(in.contains("<total>")){
+            Route rt = new Route();
+            rt.setTotalTime(arg);
+            routes.add(rt);
+        }else if(in.contains("<left>")){
+            routes.get(routes.size()-1).setLeftTime(arg);
+        }else if(in.contains("<time>")){
+            if(routes.get(routes.size()-1).getTimeInfo() == null){
+                routes.get(routes.size()-1).setTimeInfo(new ArrayList<String>());
             }
-            Log.i("Suc", "TT");
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
+            routes.get(routes.size()-1).getTimeInfo().add(arg);
+        }else if(in.contains("<busnum>")){
+            if(routes.get(routes.size()-1).getBusInfo() == null){
+                routes.get(routes.size()-1).setBusInfo(new ArrayList<String>());
+            }
+            routes.get(routes.size()-1).getBusInfo().add(arg);
+        }else if(in.contains("<station>")){
+            if(routes.get(routes.size()-1).getBusStation() == null){
+                routes.get(routes.size()-1).setBusStation(new ArrayList<String>());
+            }
+            routes.get(routes.size()-1).getBusStation().add(arg);
+        }
     }
 
     public void testSetting(){

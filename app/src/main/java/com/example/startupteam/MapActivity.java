@@ -80,9 +80,9 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
 
     URLth_map thread;
 
-    private final static String server_ip = "34.84.111.70";
+    public final static String server_ip = "34.84.111.70";
     //private final static String server_ip = "59.18.147.62";
-    private final static String server_port = "8080";
+    public final static String server_port = "8080";
     private final static String server_locate = "locate";
 
 
