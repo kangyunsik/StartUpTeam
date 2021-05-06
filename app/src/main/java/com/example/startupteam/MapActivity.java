@@ -78,10 +78,9 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
     MapPOIItem st, dest;
     String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION};
 
-    URLth_map thread;
 
     public final static String server_ip = "34.84.111.70";
-    //private final static String server_ip = "59.18.147.62";
+    //public final static String server_ip = "59.18.147.95";
     public final static String server_port = "8080";
     private final static String server_locate = "locate";
 
@@ -108,8 +107,6 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
         gpsTracker = new GpsTracker(MapActivity.this);
     }
     public void onClickS(View v){
-        Log.i("Suc","s22");
-
         Intent intent;
 
         switch(v.getId()){
@@ -126,8 +123,8 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 //mapView.setMapCenterPoint(map_point,true);
                 break;
             case R.id.FButton:
-                serviceStart();
-                busActivityStart();
+                serviceStart();         // 추후 하단 else문에 넣기. 현재 테스트 중
+                busActivityStart();     // 추후 하단 else문에 넣기. 현재 테스트 중
 
                 if(start_text.getText().toString().equals("출발지를 입력하세요")||
                 end_text.getText().toString().equals("도착지를 입력하세요")){
@@ -137,9 +134,6 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 }
                 else {
                     mapView.fitMapViewAreaToShowAllPOIItems();
-                    Log.i("Suc", "s");
-                    sendToServer();
-                    Log.i("Suc", "su");
                 }
                 break;
         }
@@ -164,11 +158,6 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
         intent.putExtra("end_point",end);
         Log.i("생성","진행");
         startActivityForResult(intent,GET_STRING_BUS);
-    }
-
-    private void sendToServer(){
-        thread = new URLth_map();
-        thread.start();
     }
 
     @Override
@@ -196,59 +185,6 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
         return super.onOptionsItemSelected(item);
     }
 
-    private class URLth_map extends Thread{
-        @Override
-        public void run(){
-            URL url = null;
-            String result = null;
-            DataOutputStream out;
-            InputStream is;
-            BufferedReader br;
-
-            try {
-                url = new URL("http:"+server_ip+":"+server_port+"/"+server_locate);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            HttpURLConnection urlCon = null;
-            try {
-                urlCon = (HttpURLConnection) url.openConnection();
-                urlCon.setRequestMethod("POST");
-                urlCon.setDoInput(true);
-                urlCon.setDoOutput(true);
-                out = new DataOutputStream(urlCon.getOutputStream());
-
-                String param =
-                        "user_x="+gpsTracker.latitude+
-                        "&user_y="+gpsTracker.longitude+
-                        "&start_x="+start.getX()+
-                        "&start_y="+start.getY()+
-                        "&end_x="+end.getX()+
-                        "&end_y="+end.getY();
-                out.writeBytes(param);
-                Log.i("Suc" ,"write : " +  param);
-                out.flush();
-
-
-                is = urlCon.getInputStream();
-
-                if (urlCon.getResponseCode() == 200) {
-                    br = new BufferedReader(new InputStreamReader((urlCon.getInputStream()), "UTF-8"));
-                    String str = br.readLine();
-                    Log.i("Suc",str);
-
-                } else {
-                    // Error handling code goes here
-                    Log.i("Suc",Integer.toString(urlCon.getResponseCode()));
-                    Log.i("Suc","fail");
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }finally{
-                urlCon.disconnect();
-            }
-        }
-    }
 
     @Override
     protected void onDestroy() {

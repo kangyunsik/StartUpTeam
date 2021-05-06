@@ -1,25 +1,20 @@
 package com.example.startupteam;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
+import android.os.Handler;
+import android.os.Messenger;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -31,8 +26,29 @@ import java.net.URL;
 
 
 public class MainActivity extends AppCompatActivity {
+    private static String id;
 
-    String[] required_permission ={
+    private Handler handler = new Handler((message) -> {
+        Object path = message.obj;
+        if (message.arg1 == RESULT_OK && path != null) {
+
+            if (((String) path).equals("OK")) {
+                Intent intent = new Intent(getApplicationContext(), MapActivity.class);     // After Sign in, Straight to Next Activity.
+                intent.putExtra("id", id);
+                startActivity(intent);
+            } else if (((String) path).equals("FAIL")) {
+                Toast.makeText(this, "서버로부터 로그인 인증을 실패했습니다.", Toast.LENGTH_LONG);
+            } else {
+                Toast.makeText(this, "서버로부터 잘못된 응답을 받았습니다.", Toast.LENGTH_LONG);
+            }
+
+
+        }
+        return false;
+    });
+
+
+    String[] required_permission = {
             Manifest.permission.ACCESS_FINE_LOCATION        // REQUIRED PERMISSIONs
     };
 
@@ -51,22 +67,32 @@ public class MainActivity extends AppCompatActivity {
         EditText edit_password = findViewById(R.id.edit_pw);
         edit_id.setText("");
 
+        //HardCoding with TEST Account id,pw = (test1,test1)
+        edit_id.setText("test1");
+        edit_password.setText("test1");
+        //==================================================
+
         Button Btn_SignIn = findViewById(R.id.button_login);
 
         Btn_SignIn.setOnClickListener((View v) -> {
-            String id = edit_id.getText().toString();
+            id = edit_id.getText().toString();
             String password = edit_password.getText().toString();
             int response;
 
-            Intent intent = new Intent(getApplicationContext(), MapActivity.class);     // After Sign in, Straight to Next Activity.
-            intent.putExtra("id",id);
-            intent.putExtra("password",password);
+            Intent intent = new Intent(this, LoginService.class);
+            String scURL = "http://" + MapActivity.server_ip + ":" + MapActivity.server_port + "/login";
+            Messenger messenger = new Messenger(handler);
+            intent.putExtra("MESSENGER", messenger);
+            intent.putExtra("uripath", scURL);
+            intent.putExtra("id", id);
+            intent.putExtra("pw", password);
+            intent.setData(Uri.parse(scURL));
+            startService(intent);
+
 
             response = checker.getResponse();
-
-            if(response == 1) {
-                startActivity(intent);
-            }else{
+            if (response != 1) {
+                Toast.makeText(this, "위치 권한이 설정되지 않아 종료됩니다.", Toast.LENGTH_LONG);
                 finish();
             }
         });
@@ -80,9 +106,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private class URLTh extends Thread{
+    private class URLTh extends Thread {
         @Override
-        public void run(){
+        public void run() {
             URL url = null;
             try {
                 url = new URL("https://dapi.kakao.com/v2/local/search/keyword.json?y=37.514322572335935&x=127.06283102249932&radius=20000&query=cafe");
@@ -92,30 +118,30 @@ public class MainActivity extends AppCompatActivity {
             HttpURLConnection urlCon = null;
             try {
                 urlCon = (HttpURLConnection) url.openConnection();
-                urlCon.setRequestProperty("Authorization","KakaoAK 08524df1fb5ba759f2cfd86e83401e49");
+                urlCon.setRequestProperty("Authorization", "KakaoAK 08524df1fb5ba759f2cfd86e83401e49");
                 urlCon.setRequestMethod("GET");
                 urlCon.setDoInput(true);
                 urlCon.setDoOutput(true);
             } catch (IOException e) {
                 e.printStackTrace();
-            }finally{
+            } finally {
                 urlCon.disconnect();
             }
-            Log.d("Suc","success1");
+            Log.d("Suc", "success1");
             try {
                 if (urlCon.getResponseCode() == 200) {
                     BufferedReader br = new BufferedReader(new InputStreamReader((urlCon.getInputStream()), "UTF-8"));
                     String str = br.readLine();
-                    Log.d("Suc",str);
+                    Log.d("Suc", str);
 
-                    Log.d("Suc","success");
+                    Log.d("Suc", "success");
                 } else {
                     // Error handling code goes here
-                    Log.d("Suc",Integer.toString(urlCon.getResponseCode()));
-                    Log.d("Suc","fail");
+                    Log.d("Suc", Integer.toString(urlCon.getResponseCode()));
+                    Log.d("Suc", "fail");
                 }
             } catch (IOException e) {
-                Log.d("Suc","fail2");
+                Log.d("Suc", "fail2");
                 e.printStackTrace();
 
             }
@@ -135,11 +161,11 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void run() {
-            for(String permit : required_permission) {
+            for (String permit : required_permission) {
                 int check = checkCallingOrSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
 
                 if (check == PackageManager.PERMISSION_DENIED) {
-                    requestPermissions(required_permission,0);
+                    requestPermissions(required_permission, 0);
                 }
             }
             this.response = 1;
@@ -150,15 +176,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode==0)
-        {
-            for(int grantResult : grantResults)
-            {
-                if(grantResult==PackageManager.PERMISSION_GRANTED){         // If allowed
-                    Toast.makeText(getApplicationContext(),"앱 권한을 허용했습니다.",Toast.LENGTH_LONG).show();
-                }
-                else {                                                      // If not allowed
-                    Toast.makeText(getApplicationContext(),"앱 권한이 필요합니다.",Toast.LENGTH_LONG).show();
+        if (requestCode == 0) {
+            for (int grantResult : grantResults) {
+                if (grantResult == PackageManager.PERMISSION_GRANTED) {         // If allowed
+                    Toast.makeText(getApplicationContext(), "앱 권한을 허용했습니다.", Toast.LENGTH_LONG).show();
+                } else {                                                      // If not allowed
+                    Toast.makeText(getApplicationContext(), "앱 권한이 필요합니다.", Toast.LENGTH_LONG).show();
                     finish();
                 }
             }
