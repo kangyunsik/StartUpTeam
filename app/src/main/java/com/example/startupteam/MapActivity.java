@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,6 +59,9 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
         }
         return false;
     });
+
+    public Route received;
+    ProgressBar progressBar;
 
     private String id;
     private static final String LOG_TAG = "MapActivity";
@@ -96,6 +100,8 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
         // java code
         start_text = (TextView)findViewById(R.id.start_text);
         end_text = (TextView)findViewById(R.id.end_text);
+        progressBar = findViewById(R.id.progressbar);
+
         mapView = new MapView(this);
         mapViewContainer = findViewById(R.id.map_view);
         mapViewContainer.addView(mapView);
@@ -108,6 +114,13 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
         }
         gpsTracker = new GpsTracker(MapActivity.this);
     }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        progressBar.setVisibility(View.INVISIBLE);
+    }
+
     public void onClickS(View v){
         Intent intent;
 
@@ -125,6 +138,8 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 //mapView.setMapCenterPoint(map_point,true);
                 break;
             case R.id.FButton:
+                Toast.makeText(MapActivity.this,"경로를 불러오는 중입니다.",Toast.LENGTH_LONG).show(); // 왜 안되지.
+
                 serviceStart();         // 추후 하단 else문에 넣기. 현재 테스트 중
                 busActivityStart();     // 추후 하단 else문에 넣기. 현재 테스트 중
 
@@ -156,6 +171,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
 
     // BUS Activity 시작.
     public void busActivityStart(){
+        progressBar.setVisibility(View.VISIBLE);
 
         //      TEST CODE
         if(start == null){
@@ -317,6 +333,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.i("테스트","CODE : " + requestCode);
 
         if (requestCode == GPS_ENABLE_REQUEST_CODE) {   // switch.
             //사용자가 GPS 활성 시켰는지 검사
@@ -375,22 +392,23 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 mapView.addPOIItem(dest);
             }
         }else if(requestCode == GET_STRING_BUS){
-            if(requestCode == RESULT_OK){
-
+            if(resultCode == RESULT_OK){
+                Log.i("테스트","A");
                 //  nm      : 경로 번호.
                 //  route   : bus번호 or 도보 여부
                 //  time    : 각각의 시간 소요 list. route list와 index가 같음.
 
-                String nm = data.getStringExtra("routeNm");
-                ArrayList<String> route = (ArrayList<String>)data.getSerializableExtra("busInfo");
-                ArrayList<String> time = (ArrayList<String>)data.getSerializableExtra("busInfo");
+                received = data.getParcelableExtra("route");
 
-                Log.i("테스트",nm);
-                Log.i("테스트",route+" ");
-                Log.i("테스트",time+" ");
+                Log.i("테스트",received.getRoute_nm());
+                Log.i("테스트",received.getBusInfo()+"");
+                Log.i("테스트",received.getTimeInfo()+"");
 
-                Toast.makeText(this,"rtnm info : " + nm,Toast.LENGTH_LONG);
+                Toast.makeText(this,"rtnm info : " + received.getRoute_nm(),Toast.LENGTH_LONG);
                 // contents.
+            }else{
+                Log.i("테스트","result CODE : " + resultCode);
+
             }
         }
     }

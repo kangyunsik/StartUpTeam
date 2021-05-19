@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 
 public class Bus_popup extends AppCompatActivity {
-    private String m_rtnm;
+    private Route received;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,17 +24,18 @@ public class Bus_popup extends AppCompatActivity {
         TextView rt = findViewById(R.id.bus_popup_route);
         TextView time = findViewById(R.id.bus_popup_time);
 
-        rtnm.setText("경로 번호: " + (m_rtnm = getIntent().getStringExtra("routeNm")));
-        rt.setText("수단 : " + ArrayListToString((ArrayList<String>)getIntent().getSerializableExtra("busInfo")));
-        time.setText("총 소요 시간 : " +  getTimeSum((ArrayList<String>)getIntent().getSerializableExtra("timeInfo")));
+        received = getIntent().getParcelableExtra("route");
+
+        rtnm.setText("경로 번호: " + received.getRoute_nm());
+        rt.setText("수단 : " + received.getBusInfo());
+        time.setText("총 소요 시간 : " +  received.getTimeInfo());
     }
 
     public void onClick(View v){
         switch(v.getId()){
             case R.id.bus_popup_ok:
-                Intent intent = new Intent();
-                intent.putExtra("routeNm",m_rtnm);
-                setResult(RESULT_OK, intent);
+                //Intent intent = new Intent();
+                setResult(RESULT_OK,getIntent());
                 finish();
                 break;
             case R.id.bus_popup_cancel:

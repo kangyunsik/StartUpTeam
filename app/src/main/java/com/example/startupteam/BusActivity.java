@@ -64,9 +64,7 @@ public class BusActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView parent, View v, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), Bus_popup.class);
-                intent.putExtra("routeNm", myAdapter.getItem(position).getRoute_nm());
-                intent.putExtra("busInfo", myAdapter.getItem(position).getBusInfo());
-                intent.putExtra("timeInfo", myAdapter.getItem(position).getTimeInfo());
+                intent.putExtra("route",myAdapter.getItem(position));
                 startActivityForResult(intent,GET_BUS_RTNM);
             }
         });
@@ -74,6 +72,7 @@ public class BusActivity extends AppCompatActivity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if(requestCode == GET_BUS_RTNM){
             if(resultCode == RESULT_OK){
                 setResult(RESULT_OK,data);
@@ -162,6 +161,7 @@ public class BusActivity extends AppCompatActivity {
         if(in.contains("<total>")){
             Route rt = new Route();
             rt.setTotalTime(arg);
+            rt.setRoute_nm((routes.size()+1)+"");
             routes.add(rt);
         }else if(in.contains("<left>")){
             routes.get(routes.size()-1).setLeftTime(arg);
