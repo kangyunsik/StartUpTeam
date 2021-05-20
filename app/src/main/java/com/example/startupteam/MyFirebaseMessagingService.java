@@ -4,7 +4,6 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.job.JobService;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -28,7 +27,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private String title ="";
     private String body ="";
     private String color ="";
-
 
     // [START receive_message]
     @Override
@@ -103,7 +101,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private void sendNotification() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, MapActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
@@ -112,7 +110,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
-                        .setSmallIcon(R.mipmap.ic_firebase)
+                        .setSmallIcon(R.mipmap.ic_remarquer)
                         .setContentTitle(title)
                         .setContentText(body)
                         .setColor(Color.parseColor(color))
@@ -134,4 +132,4 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
     }
-}}
+}

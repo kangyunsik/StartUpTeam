@@ -45,6 +45,7 @@ public class BusAdapter extends BaseAdapter {
         TextView routeView = (TextView)view.findViewById(R.id.route_nm);
         TextView wayView = (TextView)view.findViewById(R.id.way);
         TextView timeView = (TextView)view.findViewById(R.id.time);
+        TextView first = (TextView)view.findViewById(R.id.FirstStation);
 
         routes.get(position);
 
@@ -60,16 +61,16 @@ public class BusAdapter extends BaseAdapter {
         for(String s : routes.get(position).getTimeInfo())
             timeInfo += s+"    \t\t";
         timeView.setText(timeInfo);
-
+        first.setText("승차 정류장은 "+routes.get(position).getBusStation().get(0)+"입니다.");
         return view;
     }
-    public void addItem(ArrayList<String> busInfo, ArrayList<String> timeInfo) {
+    public void addItem(ArrayList<String> busInfo, ArrayList<String> timeInfo, ArrayList<String> busStation) {
         Route rt = new Route();
 
         rt.setRoute_nm((routes.size()+1)+"");
         rt.setBusInfo(busInfo);
         rt.setTimeInfo(timeInfo);
-
+        rt.setBusStation(busStation);
         routes.add(rt);
     }
 }
