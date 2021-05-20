@@ -21,6 +21,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class ServerCommunicator extends IntentService {
+    private String token;
 
     public ServerCommunicator(){
         super("ServerCommunicator");
@@ -32,6 +33,8 @@ public class ServerCommunicator extends IntentService {
         //Uri data = intent.getData();
         String id = intent.getStringExtra("id");
         String uriPath = intent.getStringExtra("uripath");
+
+        this.token = intent.getStringExtra("token");
 
         String finalURL;
 
@@ -64,7 +67,8 @@ public class ServerCommunicator extends IntentService {
                 e.printStackTrace();
             }
             try {
-                finalURL = uriPath + "?x=" + gpsTracker.getLatitude() + "&y=" + gpsTracker.getLongitude() +"&id="+id;
+                Log.d("토큰",token);
+                finalURL = uriPath + "?x=" + gpsTracker.getLatitude() + "&y=" + gpsTracker.getLongitude() +"&id="+id +"&token="+token;
                 URL url = new URL(finalURL);
                 con = (HttpURLConnection) url.openConnection();
                 con.setRequestMethod("GET");

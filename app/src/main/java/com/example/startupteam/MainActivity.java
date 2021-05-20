@@ -30,6 +30,7 @@ import java.net.URL;
 
 
 public class MainActivity extends AppCompatActivity {
+    private String tok;
     private static String id;
 
     private Handler handler = new Handler((message) -> {
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
             if (((String) path).equals("OK")) {
                 Intent intent = new Intent(getApplicationContext(), MapActivity.class);     // After Sign in, Straight to Next Activity.
                 intent.putExtra("id", id);
+                intent.putExtra("token",tok);
                 startActivity(intent);
                 Toast.makeText(this, id + "님, 환영합니다.", Toast.LENGTH_LONG).show();
 
@@ -74,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
                         // Get new FCM registration token
                         String token = task.getResult();
                         Log.d("ttttttttt",token);
+                        tok = token;
                         // Log and toast
 
                     }

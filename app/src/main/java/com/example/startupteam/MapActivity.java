@@ -61,7 +61,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
         }
         return false;
     });
-
+    private String token;
     public Route received;
     ProgressBar progressBar;
     private String SBusnum;
@@ -110,6 +110,9 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
         mapViewContainer.addView(mapView);
         mapView.setMapViewEventListener(this);
         mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
+
+        token = getIntent().getStringExtra("token");
+
         if (!checkLocationServicesStatus()) {
             showDialogForLocationServiceSetting();
         } else {
@@ -168,6 +171,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
         intent.putExtra("MESSENGER",messenger);
         intent.putExtra("uripath",scURL);
         intent.putExtra("id",id);
+        intent.putExtra("token",token);
         intent.setData(Uri.parse(scURL));
         startService(intent);
     }
