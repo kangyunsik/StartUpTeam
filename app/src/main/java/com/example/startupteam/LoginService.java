@@ -23,7 +23,6 @@ public class LoginService extends IntentService {
     public LoginService() {
         super("LoginService");
     }
-
     @Override
     protected void onHandleIntent(Intent intent) {
         String uriPath = intent.getStringExtra("uripath");

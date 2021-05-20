@@ -1,12 +1,12 @@
 <component name="libraryTable">
   <library name="Gradle: androidx.navigation:navigation-common:2.2.2@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b610ee74b113a5e24d57455ee53efeb5/navigation-common-2.2.2/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b610ee74b113a5e24d57455ee53efeb5/navigation-common-2.2.2/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b610ee74b113a5e24d57455ee53efeb5/navigation-common-2.2.2/AndroidManifest.xml" />
       <root url="jar://$PROJECT_DIR$/../caches/transforms-2/files-2.1/b610ee74b113a5e24d57455ee53efeb5/navigation-common-2.2.2/jars/classes.jar!/" />
       <root url="file://$PROJECT_DIR$/../caches/transforms-2/files-2.1/b610ee74b113a5e24d57455ee53efeb5/navigation-common-2.2.2/AndroidManifest.xml" />
       <root url="file://$PROJECT_DIR$/../caches/transforms-2/files-2.1/b610ee74b113a5e24d57455ee53efeb5/navigation-common-2.2.2/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/fabe98b037bd1814785c1a50400ada26/navigation-common-2.2.2/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/fabe98b037bd1814785c1a50400ada26/navigation-common-2.2.2/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/fabe98b037bd1814785c1a50400ada26/navigation-common-2.2.2/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

@@ -40,6 +40,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -62,7 +64,8 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
 
     public Route received;
     ProgressBar progressBar;
-
+    private String SBusnum;
+    private String SBusStation;
     private String id;
     private static final String LOG_TAG = "MapActivity";
     private MapView mapView;
@@ -399,10 +402,43 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 //  time    : 각각의 시간 소요 list. route list와 index가 같음.
 
                 received = data.getParcelableExtra("route");
+                int count = 0;
+                for (int i = 0; i < received.getBusInfo().size(); i++) {
+                    if (!(received.getBusInfo().get(i).equals("0"))) {
+                        SBusnum = received.getBusInfo().get(i);
+                        break;
+                    }
+                }
+                if(received.getBusInfo().size()<=3) {
+                    SBusStation = received.getLastStation();
+                }
+                else {
+                    for (int i = 0; i < received.getBusStation().size(); i++) {
+                        if (!(received.getBusStation().get(i).equals("0"))) {
+                            if(count==1){
+                                SBusStation = received.getBusStation().get(i);
+                            }
+                            count++;
 
+
+                        }
+                    }
+                }
+                Log.i("첫번째 버스",SBusnum);
+                Log.i("정류장",received.getBusStation()+"");
                 Log.i("테스트",received.getRoute_nm());
                 Log.i("테스트",received.getBusInfo()+"");
                 Log.i("테스트",received.getTimeInfo()+"");
+
+                URLTh_send urlth_send = new URLTh_send();
+                Thread Sthread = new Thread(urlth_send);
+                Sthread.start();
+                try {
+                    Sthread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
 
                 Toast.makeText(this,"rtnm info : " + received.getRoute_nm(),Toast.LENGTH_LONG);
                 // contents.
@@ -465,5 +501,44 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
 
     }
 
-}
 
+    class URLTh_send extends Thread {
+
+        @Override
+        public void run() {
+            URL url = null;
+            try {
+                url = new URL( "http:"+MapActivity.server_ip +":"+ MapActivity.server_port + "/"+"setRoute?id="+id+"&busnum="+SBusnum+"&busstation="+SBusStation);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            HttpURLConnection urlCon = null;
+            try {
+                urlCon = (HttpURLConnection) url.openConnection();
+                urlCon.setRequestMethod("GET");
+                urlCon.setDoInput(true);
+                urlCon.setDoOutput(true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                urlCon.disconnect();
+            }
+            Log.d("Suc", "success1");
+            try {
+                if (urlCon.getResponseCode() == 200) {
+                    BufferedReader br = new BufferedReader(new InputStreamReader((urlCon.getInputStream()), "UTF-8"));
+                    Log.d("Suc", "success");
+                } else {
+                    // Error handling code goes here
+                    Log.d("Suc", Integer.toString(urlCon.getResponseCode()));
+                    Log.d("Suc", "fail");
+                }
+            } catch (IOException e) {
+                Log.d("Suc", "fail2");
+                e.printStackTrace();
+
+            }
+        }
+    }
+
+}

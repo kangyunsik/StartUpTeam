@@ -19,6 +19,19 @@
         android:theme="@style/Theme.StartUpTeam"
         android:usesCleartextTraffic="true">
         <service
+            android:name=".MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".Firebase.MyJobService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
+            </intent-filter>
+        </service>
+        <service
             android:name=".LoginService"
             android:exported="false"></service>
 

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "437563009594",
+    "project_id": "buspush-28fed",
+    "storage_bucket": "buspush-28fed.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:437563009594:android:98674431285c95534c2303",
+        "android_client_info": {
+          "package_name": "com.example.startupteam"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "437563009594-0vcgtig1jc0mfvp699jhaa4mqdai5iip.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.startupteam",
+            "certificate_hash": "fad58324b854565b278c318d70a60cb4817ec123"
+          }
+        },
+        {
+          "client_id": "437563009594-h0pigjqhqvl0q1cqc5rqk2vvtj27re0m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPvfHXs3n5dCjblqZ_H8zoUmRB85LneoM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "437563009594-h0pigjqhqvl0q1cqc5rqk2vvtj27re0m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
