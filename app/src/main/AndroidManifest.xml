@@ -18,8 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StartUpTeam"
         android:usesCleartextTraffic="true">
-        <service
-            android:name=".MyFirebaseMessagingService">
+        <service android:name=".MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -37,7 +36,13 @@
 
         <activity
             android:name=".LoadingActivity"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".Result_popup"
             android:label="@string/title_activity_result_popup"
@@ -71,11 +76,7 @@
 
         <activity android:name=".MapActivity" />
         <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity> <!-- API KEY -->
         <!--<meta-data
             android:name="com.kakao.sdk.AppKey"

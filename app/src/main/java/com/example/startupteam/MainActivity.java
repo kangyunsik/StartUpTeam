@@ -83,8 +83,6 @@ public class MainActivity extends AppCompatActivity {
                 });
 
 
-        Intent intent2 = new Intent(this, LoadingActivity.class);
-        startActivity(intent2);
 
         Checker checker = new Checker();                    // PERMISSION CHECKER THREAD
         checker.start();

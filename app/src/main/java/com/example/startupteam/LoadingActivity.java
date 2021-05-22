@@ -3,6 +3,7 @@ package com.example.startupteam;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -18,7 +19,9 @@ public class LoadingActivity extends Activity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                finish();
+                Intent intent= new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);  //Loagin화면을 띄운다.
+                finish();   //현재 액티비티 종료
             }
         }, 2000);
     }
