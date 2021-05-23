@@ -41,36 +41,58 @@ public class BusAdapter extends BaseAdapter {
         Log.i("버스 어댑터","getView 작동");
         View view = mLayoutInflater.inflate(R.layout.listview_bus, null);
         String busInfo = "",timeInfo = "";
-
+        ArrayList<String> bnumcollect = new ArrayList<String>();
+        ArrayList<String> bscollect = new ArrayList<String>();
+        TextView[] busnumView = new TextView[5];
+        TextView[] busStationView = new TextView[5];
         TextView routeView = (TextView)view.findViewById(R.id.route_nm);
         TextView wayView = (TextView)view.findViewById(R.id.way);
         TextView timeView = (TextView)view.findViewById(R.id.time);
-        TextView first = (TextView)view.findViewById(R.id.FirstStation);
-
+        TextView totalView = (TextView)view.findViewById(R.id.TotalTime);
+        TextView leftView = (TextView)view.findViewById(R.id.LeftTime);
+        busnumView[0] = (TextView)view.findViewById(R.id.FirstBusnum);
+        busStationView[0] = (TextView)view.findViewById(R.id.FirstBusStation);
+        busnumView[1] = (TextView)view.findViewById(R.id.SecondBusnum);
+        busStationView[1] = (TextView)view.findViewById(R.id.SecondBusStation);
+        busnumView[2] = (TextView)view.findViewById(R.id.ThirdBusnum);
+        busStationView[2] = (TextView)view.findViewById(R.id.ThirdBusStation);
         routes.get(position);
 
         routeView.setText(routes.get(position).getRoute_nm());
-
+        int count = 0;
         for(String s : routes.get(position).getBusInfo()) {
             if(s.equals("0"))
                 s = "도보";
+            else {
+                bnumcollect.add(s);
+                bscollect.add(routes.get(position).getBusStation().get(count));
+            }
             busInfo += s + "    \t\t";
+            count++;
         }
         wayView.setText(busInfo);
-
+        leftView.setText(routes.get(position).getLeftTime());
         for(String s : routes.get(position).getTimeInfo())
             timeInfo += s+"    \t\t";
         timeView.setText(timeInfo);
-        first.setText("승차 정류장은 "+routes.get(position).getBusStation().get(0)+"입니다.");
+        totalView.setText("총 "+routes.get(position).getTotalTime()+"분");
+        for(int i=0;i<bnumcollect.size();i++){
+            busnumView[i].setText(bnumcollect.get(i));
+            busStationView[i].setText(bscollect.get(i));
+        }
+        busnumView[bnumcollect.size()].setText("하차");
+        busStationView[bnumcollect.size()].setText(routes.get(position).getLastStation());
         return view;
     }
-    public void addItem(ArrayList<String> busInfo, ArrayList<String> timeInfo, ArrayList<String> busStation) {
+    public void addItem(ArrayList<String> busInfo, ArrayList<String> timeInfo, ArrayList<String> busStation,String lastStation,String leftTime) {
         Route rt = new Route();
 
         rt.setRoute_nm((routes.size()+1)+"");
         rt.setBusInfo(busInfo);
         rt.setTimeInfo(timeInfo);
         rt.setBusStation(busStation);
+        rt.setLastStation(lastStation);
+        rt.setLeftTime(leftTime);
         routes.add(rt);
     }
 }

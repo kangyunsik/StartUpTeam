@@ -374,6 +374,29 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 mapView.addPOIItem(st);
                 Log.d("마커","마커찍힘");
             }
+            else if(resultCode == -2){
+                if(start == null)
+                    start = new Document();
+                if(st!=null)
+                    mapView.removePOIItem(st);
+                start.setRoadAddressName("불명");
+                start.setPlaceName("현재 위치");
+                start.setX(Double.toString(gpsTracker.getLongitude()));
+                start.setY(Double.toString(gpsTracker.getLatitude()));
+                Toast.makeText(getApplicationContext(),
+                        "현재 위치로 설정합니다.",
+                        Toast.LENGTH_LONG).show();
+                ((TextView) findViewById(R.id.start_text)).setText(start.getPlaceName());
+                mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(gpsTracker.getLatitude(),gpsTracker.getLongitude()),true);
+                st = new MapPOIItem();
+                st.setItemName("출발지");
+                st.setTag(0);
+                st.setMapPoint(MapPoint.mapPointWithGeoCoord(gpsTracker.getLatitude(),gpsTracker.getLongitude()));
+                st.setMarkerType(MapPOIItem.MarkerType.BluePin); // 기본으로 제공하는 BluePin 마커 모양.
+                st.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
+                mapView.addPOIItem(st);
+                Log.d("마커","마커찍힘");
+            }
         }else if(requestCode == GET_STRING_END){
             if(resultCode == RESULT_OK){
                 if(end == null)
@@ -382,7 +405,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                     mapView.removePOIItem(dest);
                 end.setRoadAddressName(data.getStringExtra("road_address_name"));
                 end.setPlaceName(data.getStringExtra("place_name"));
-                end.setX(data.getStringExtra("x"));
+                end.setX(Double.toString(gpsTracker.getLongitude()));
                 end.setY(data.getStringExtra("y"));
 
                 Toast.makeText(getApplicationContext(),
@@ -394,6 +417,29 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 dest.setItemName("도착지");
                 dest.setTag(0);
                 dest.setMapPoint(MapPoint.mapPointWithGeoCoord(Double.parseDouble(end.getY()),Double.parseDouble(end.getX())));
+                dest.setMarkerType(MapPOIItem.MarkerType.BluePin); // 기본으로 제공하는 BluePin 마커 모양.
+                dest.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
+                mapView.addPOIItem(dest);
+            }
+            if(resultCode == -2){
+                if(end == null)
+                    end = new Document();
+                if(dest!=null)
+                    mapView.removePOIItem(dest);
+                end.setRoadAddressName("불명");
+                end.setPlaceName("현재 위치");
+                end.setX(Double.toString(gpsTracker.getLongitude()));
+                end.setY(Double.toString(gpsTracker.getLatitude()));
+
+                Toast.makeText(getApplicationContext(),
+                        "현재 위치로 설정합니다.",
+                        Toast.LENGTH_LONG).show();
+                ((TextView) findViewById(R.id.end_text)).setText(end.getPlaceName());
+                mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(gpsTracker.getLatitude(),gpsTracker.getLongitude()),true);
+                dest = new MapPOIItem();
+                dest.setItemName("도착지");
+                dest.setTag(0);
+                dest.setMapPoint(MapPoint.mapPointWithGeoCoord(gpsTracker.getLatitude(),gpsTracker.getLongitude()));
                 dest.setMarkerType(MapPOIItem.MarkerType.BluePin); // 기본으로 제공하는 BluePin 마커 모양.
                 dest.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
                 mapView.addPOIItem(dest);

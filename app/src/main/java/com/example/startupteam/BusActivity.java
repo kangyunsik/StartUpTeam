@@ -160,7 +160,7 @@ public class BusActivity extends AppCompatActivity {
         String arg = in.split("<")[0];
         if(in.contains("<total>")){
             Route rt = new Route();
-            rt.setTotalTime(arg);
+            rt.setTotalTime(arg.replace("[",""));
             rt.setRoute_nm((routes.size()+1)+"");
             routes.add(rt);
         }else if(in.contains("<left>")){
@@ -180,6 +180,11 @@ public class BusActivity extends AppCompatActivity {
                 routes.get(routes.size()-1).setBusStation(new ArrayList<String>());
             }
             routes.get(routes.size()-1).getBusStation().add(arg);
+        }
+        else if(in.contains("<last>")){
+            if(routes.get(routes.size()-1).getLastStation() == null){
+                routes.get(routes.size()-1).setLastStation(arg);
+            }
         }
     }
 }

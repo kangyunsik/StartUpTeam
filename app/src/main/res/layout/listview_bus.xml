@@ -7,28 +7,44 @@
 
     <LinearLayout
         android:id="@+id/linearLayout3"
-        android:layout_width="414dp"
-        android:layout_height="125dp"
+        android:layout_width="416dp"
+        android:layout_height="247dp"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
 
-            <TextView
-                android:id="@+id/route_nm"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TextView"
-                android:textColor="@color/purple_700"
-                android:textColorHighlight="@color/purple_700"
-                android:textSize="18sp"
-                android:visibility="visible" />
+                android:layout_height="26dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/route_nm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="TextView"
+                    android:textColor="@color/purple_700"
+                    android:textColorHighlight="@color/purple_700"
+                    android:textSize="18sp"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/TotalTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="10"
+                    android:text="TextView"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/way"
@@ -36,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:text="TextView"
-                android:textColor="@android:color/darker_gray"
+                android:textColor="@android:color/holo_green_light"
                 android:textColorHighlight="@color/purple_700"
                 android:visibility="visible" />
 
@@ -45,21 +61,104 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
                 android:text="TextView"
                 android:textColor="@android:color/darker_gray"
                 android:textColorHighlight="@color/purple_700"
                 android:visibility="visible" />
 
-        </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40sp"
+                android:layout_marginBottom="2dp"
+                android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/FirstStation"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="TextView"
-            android:textAlignment="center"
-            android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/FirstBusnum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40sp"
+                    android:layout_marginRight="30dp"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textColor="@android:color/holo_blue_dark" />
+
+                <TextView
+                    android:id="@+id/FirstBusStation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40sp"
+                    android:layout_weight="3"
+                    android:text=""
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/LeftTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40sp"
+                    android:layout_weight="3"
+                    android:textColor="@android:color/holo_red_light" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40sp"
+                android:layout_marginBottom="2dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/SecondBusnum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40sp"
+                    android:layout_marginRight="30dp"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textColor="@android:color/holo_blue_dark" />
+
+                <TextView
+                    android:id="@+id/SecondBusStation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40sp"
+                    android:layout_weight="3"
+                    android:text=""
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40sp"
+                    android:layout_weight="3" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40sp"
+                android:layout_marginBottom="2dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/ThirdBusnum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40sp"
+                    android:layout_marginRight="30dp"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textColor="@android:color/holo_blue_dark" />
+
+                <TextView
+                    android:id="@+id/ThirdBusStation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40sp"
+                    android:layout_weight="3"
+                    android:text=""
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40sp"
+                    android:layout_weight="3" />
+            </LinearLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
