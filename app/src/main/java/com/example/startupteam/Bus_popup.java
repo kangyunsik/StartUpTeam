@@ -25,10 +25,23 @@ public class Bus_popup extends AppCompatActivity {
         TextView time = findViewById(R.id.bus_popup_time);
 
         received = getIntent().getParcelableExtra("route");
+        ArrayList<String> bnumcollect = new ArrayList<String>();
+        ArrayList<String> bscollect = new ArrayList<String>();
+        for(int i=0;i<received.getBusInfo().size();i++) {
+            if (received.getBusInfo().get(i).equals("0")){
 
-        rtnm.setText("경로 번호: " + received.getRoute_nm());
-        rt.setText("수단 : " + received.getBusInfo());
-        time.setText("총 소요 시간 : " +  received.getTimeInfo());
+            }
+            else {
+                bnumcollect.add(received.getBusInfo().get(i));
+                bscollect.add(received.getBusStation().get(i));
+                break;
+            }
+        }
+
+
+        rtnm.setText(received.getRoute_nm()+"번째 경로");
+        rt.setText("탑승 버스 : " + bnumcollect.get(0)+" \n\n탑승 정류장 : "+bscollect.get(0));
+        time.setText("총 소요 시간 : " +  received.getTotalTime()+"분");
     }
 
     public void onClick(View v){
