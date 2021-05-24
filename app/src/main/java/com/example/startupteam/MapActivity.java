@@ -405,7 +405,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                     mapView.removePOIItem(dest);
                 end.setRoadAddressName(data.getStringExtra("road_address_name"));
                 end.setPlaceName(data.getStringExtra("place_name"));
-                end.setX(Double.toString(gpsTracker.getLongitude()));
+                end.setX(data.getStringExtra("x"));
                 end.setY(data.getStringExtra("y"));
 
                 Toast.makeText(getApplicationContext(),
@@ -421,7 +421,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 dest.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
                 mapView.addPOIItem(dest);
             }
-            if(resultCode == -2){
+            else if(resultCode == -2){
                 if(end == null)
                     end = new Document();
                 if(dest!=null)
