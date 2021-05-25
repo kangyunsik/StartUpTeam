@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,15 +23,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import net.daum.android.map.coord.MapCoord;
+import net.daum.mf.map.api.CameraUpdateFactory;
 import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
+import net.daum.mf.map.api.MapPointBounds;
+import net.daum.mf.map.api.MapPolyline;
 import net.daum.mf.map.api.MapView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -61,10 +67,15 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
         }
         return false;
     });
+    Menu menu;
+    boolean serviceStatus = false;
+    private Intent intentservice;
     private String token;
     public Route received;
-    ProgressBar progressBar;
+    private double startlat;
+    private double startlon;
     private String SBusnum;
+    private ProgressBar progressBar;
     private String SBusStation, stBusStation;
     private String id;
     private static final String LOG_TAG = "MapActivity";
@@ -76,6 +87,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
     public static final int GET_STRING_START = 10001;
     public static final int GET_STRING_END = 10002;
     public static final int GET_STRING_BUS = 10003;
+    public static final int SHOW_CURRENT = 10010;
     private MapPoint map_point;
     private Document start;
     private Document end;
@@ -145,7 +157,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 break;
             case R.id.FButton:
                 Toast.makeText(MapActivity.this,"경로를 불러오는 중입니다.",Toast.LENGTH_LONG).show(); // 왜 안되지.
-
+                mapView.removeAllPolylines();
                          // 추후 하단 else문에 넣기. 현재 테스트 중
                 busActivityStart();     // 추후 하단 else문에 넣기. 현재 테스트 중
 
@@ -165,15 +177,16 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
 
     // Server로 지속적으로 위치 전송하는 서비스 시작하는 메소드.
     public void serviceStart(){
-        Intent intent = new Intent(this,ServerCommunicator.class);
+        intentservice = new Intent(this,ServerCommunicator.class);
         String scURL = "http://" + server_ip + ":"+server_port+"/locateupdate";
         Messenger messenger = new Messenger(handler);
-        intent.putExtra("MESSENGER",messenger);
-        intent.putExtra("uripath",scURL);
-        intent.putExtra("id",id);
-        intent.putExtra("token",token);
-        intent.setData(Uri.parse(scURL));
-        startService(intent);
+        intentservice.putExtra("MESSENGER",messenger);
+        intentservice.putExtra("uripath",scURL);
+        intentservice.putExtra("id",id);
+        intentservice.putExtra("token",token);
+        intentservice.setData(Uri.parse(scURL));
+        serviceStatus= true;
+        startService(intentservice);
     }
 
     // BUS Activity 시작.
@@ -200,9 +213,9 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_option, menu);
-        return true;
+       getMenuInflater().inflate(R.menu.menu_option,menu);
+       this.menu = menu;
+       return true;
     }
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -219,11 +232,40 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                         "위치 추적 모드를 종료합니다.",
                         Toast.LENGTH_LONG).show();
                 break;
+            case R.id.menu3:
+                if(!serviceStatus) {
+                    Toast.makeText(getApplicationContext(),
+                            "선택된 경로가 존재하지 않습니다.",
+                            Toast.LENGTH_LONG).show();
+                }
+                else{
+                    Intent intent = new Intent(getApplicationContext(), Status_popup.class);
+                    intent.putExtra("route",received);
+                    intent.putExtra("dest",end_text.getText().toString());
+                    startActivity(intent);
+                }
+                break;
+            case R.id.menu4:
+                if(serviceStatus) {
+                    stopService(intentservice);
+                    serviceStatus=false;
+                    Toast.makeText(getApplicationContext(),
+                            "알림 서비스를 종료합니다.",
+                            Toast.LENGTH_LONG).show();
+                    mapView.removeAllPolylines();
+                }
+                else
+                    Toast.makeText(getApplicationContext(),
+                            "선택된 경로가 존재하지 않습니다.",
+                            Toast.LENGTH_LONG).show();
         }
         return super.onOptionsItemSelected(item);
     }
 
-
+    @Override
+    public void onBackPressed() {
+        return;
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -360,6 +402,8 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 start.setPlaceName(data.getStringExtra("place_name"));
                 start.setX(data.getStringExtra("x"));
                 start.setY(data.getStringExtra("y"));
+                startlat = Double.parseDouble(data.getStringExtra("y"));
+                startlon = Double.parseDouble(data.getStringExtra("x"));
                 Toast.makeText(getApplicationContext(),
                         data.getStringExtra("road_address_name"),
                         Toast.LENGTH_LONG).show();
@@ -383,6 +427,8 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 start.setPlaceName("현재 위치");
                 start.setX(Double.toString(gpsTracker.getLongitude()));
                 start.setY(Double.toString(gpsTracker.getLatitude()));
+                startlat = gpsTracker.getLatitude();
+                startlon = gpsTracker.getLongitude();
                 Toast.makeText(getApplicationContext(),
                         "현재 위치로 설정합니다.",
                         Toast.LENGTH_LONG).show();
@@ -483,7 +529,6 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 Log.i("테스트",received.getBusInfo()+"");
                 Log.i("테스트",received.getTimeInfo()+"");
 
-                serviceStart();
                 URLTh_send urlth_send = new URLTh_send();
                 Thread Sthread = new Thread(urlth_send);
                 Sthread.start();
@@ -492,6 +537,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                serviceStart();
 
 
                 Toast.makeText(this,"rtnm info : " + received.getRoute_nm(),Toast.LENGTH_LONG);
@@ -581,7 +627,15 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
             try {
                 if (urlCon.getResponseCode() == 200) {
                     BufferedReader br = new BufferedReader(new InputStreamReader((urlCon.getInputStream()), "UTF-8"));
-                    Log.d("Suc", "success");
+                    String br_result = br.readLine();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            markTakeBus(br_result);
+                            menu.findItem(R.id.menu3).setTitle("Check Current status");
+                        }
+                    });
+                    Log.d("brread", br_result);
                 } else {
                     // Error handling code goes here
                     Log.d("Suc", Integer.toString(urlCon.getResponseCode()));
@@ -592,6 +646,46 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 e.printStackTrace();
 
             }
+        }
+    }
+    public void markTakeBus(String json) {
+        try {
+            Log.d("markjson value",json);
+            JSONObject jsonObject = new JSONObject(json);
+            JSONObject data = jsonObject.getJSONObject("data");
+            String takeBusName="", takeBuslat="", takeBuslon="";
+                takeBusName = data.getString("name");
+                takeBuslat = data.getString("latitude");
+                takeBuslon = data.getString("longitude");
+            MapPOIItem customMarker = new MapPOIItem();
+            Log.d("parsingresult","pars");
+            mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(Double.parseDouble(takeBuslat),Double.parseDouble(takeBuslon)), true);
+            customMarker.setItemName("탑승 정류장 : "+takeBusName);
+            customMarker.setTag(1);
+            customMarker.setMapPoint(MapPoint.mapPointWithGeoCoord(Double.parseDouble(takeBuslat),Double.parseDouble(takeBuslon)));
+            customMarker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
+            customMarker.setCustomImageResourceId(R.drawable.busmarker); // 마커 이미지.
+            customMarker.setCustomImageAutoscale(false); // hdpi, xhdpi 등 안드로이드 플랫폼의 스케일을 사용할 경우 지도 라이브러리의 스케일 기능을 꺼줌.
+            customMarker.setCustomImageAnchor(0.5f, 1.0f); // 마커 이미지중 기준이 되는 위치(앵커포인트) 지정 - 마커 이미지 좌측 상단 기준 x(0.0f ~ 1.0f), y(0.0f ~ 1.0f) 값.
+            mapView.addPOIItem(customMarker);
+            MapPolyline polyline = new MapPolyline();
+            polyline.setTag(1000);
+            polyline.setLineColor(Color.argb(128, 255, 51, 0)); // Polyline 컬러 지정.
+
+// Polyline 좌표 지정.
+            polyline.addPoint(MapPoint.mapPointWithGeoCoord(startlat,startlon));
+            polyline.addPoint(MapPoint.mapPointWithGeoCoord(Double.parseDouble(takeBuslat),Double.parseDouble(takeBuslon)));
+// Polyline 지도에 올리기.
+            mapView.addPolyline(polyline);
+
+// 지도뷰의 중심좌표와 줌레벨을 Polyline이 모두 나오도록 조정.
+            MapPointBounds mapPointBounds = new MapPointBounds(polyline.getMapPoints());
+            int padding = 100; // px
+            mapView.moveCamera(CameraUpdateFactory.newMapPointBounds(mapPointBounds, padding));
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
