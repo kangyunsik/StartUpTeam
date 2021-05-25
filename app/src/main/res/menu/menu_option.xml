@@ -24,4 +24,23 @@
 
     </item>
 
+    <item
+
+        android:id="@+id/menu3"
+
+        android:title="Check Current Status"
+
+        app:showAsAction="never">
+
+    </item>
+    <item
+
+        android:id="@+id/menu4"
+
+        android:title="안내종료"
+
+        app:showAsAction="never">
+
+    </item>
+
 </menu>
