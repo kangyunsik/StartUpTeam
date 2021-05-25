@@ -75,7 +75,15 @@ public class BusAdapter extends BaseAdapter {
         for(String s : routes.get(position).getTimeInfo())
             timeInfo += s+"    \t\t";
         timeView.setText(timeInfo);
-        totalView.setText("총 "+routes.get(position).getTotalTime()+"분");
+        int total=0;
+        for(int i=0;i<routes.get(position).getTimeInfo().size();i++) {
+            int plus = Integer.parseInt(routes.get(position).getTimeInfo().get(i).replace("분",""));
+            total =  total + plus;
+        }
+        if(total>=60)
+            totalView.setText("총 " +Integer.toString(total/60)+"시간 "+Integer.toString(total%60)+"분");
+        else
+            totalView.setText("총 "+Integer.toString(total)+"분");
         for(int i=0;i<bnumcollect.size();i++){
             busnumView[i].setText(bnumcollect.get(i));
             busStationView[i].setText(bscollect.get(i));

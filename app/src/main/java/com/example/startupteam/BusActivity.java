@@ -162,6 +162,7 @@ public class BusActivity extends AppCompatActivity {
             Route rt = new Route();
             rt.setTotalTime(arg.replace("[",""));
             rt.setRoute_nm((routes.size()+1)+"");
+            Log.d("totaltime",rt.getTotalTime());
             routes.add(rt);
         }else if(in.contains("<left>")){
             routes.get(routes.size()-1).setLeftTime(arg);
