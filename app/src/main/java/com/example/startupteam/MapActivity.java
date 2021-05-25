@@ -65,7 +65,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
     public Route received;
     ProgressBar progressBar;
     private String SBusnum;
-    private String SBusStation;
+    private String SBusStation, stBusStation;
     private String id;
     private static final String LOG_TAG = "MapActivity";
     private MapView mapView;
@@ -465,7 +465,10 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 else {
                     for (int i = 0; i < received.getBusStation().size(); i++) {
                         if (!(received.getBusStation().get(i).equals("0"))) {
-                            if(count==1){
+                            if(count==0){
+                                stBusStation = received.getBusStation().get(i);
+                            }
+                            else if(count==1){
                                 SBusStation = received.getBusStation().get(i);
                             }
                             count++;
@@ -559,7 +562,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
         public void run() {
             URL url = null;
             try {
-                url = new URL( "http:"+MapActivity.server_ip +":"+ MapActivity.server_port + "/"+"setRoute?id="+id+"&busnum="+SBusnum+"&busstation="+SBusStation);
+                url = new URL( "http:"+MapActivity.server_ip +":"+ MapActivity.server_port + "/"+"setRoute?id="+id+"&startstation="+stBusStation+"&busnum="+SBusnum+"&busstation="+SBusStation);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
