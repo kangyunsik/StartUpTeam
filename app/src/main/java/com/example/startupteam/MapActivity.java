@@ -146,7 +146,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
             case R.id.FButton:
                 Toast.makeText(MapActivity.this,"경로를 불러오는 중입니다.",Toast.LENGTH_LONG).show(); // 왜 안되지.
 
-                serviceStart();         // 추후 하단 else문에 넣기. 현재 테스트 중
+                         // 추후 하단 else문에 넣기. 현재 테스트 중
                 busActivityStart();     // 추후 하단 else문에 넣기. 현재 테스트 중
 
                 if(start_text.getText().toString().equals("출발지를 입력하세요")||
@@ -480,6 +480,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 Log.i("테스트",received.getBusInfo()+"");
                 Log.i("테스트",received.getTimeInfo()+"");
 
+                serviceStart();
                 URLTh_send urlth_send = new URLTh_send();
                 Thread Sthread = new Thread(urlth_send);
                 Sthread.start();
