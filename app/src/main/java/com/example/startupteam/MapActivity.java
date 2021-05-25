@@ -483,7 +483,6 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 Log.i("테스트",received.getBusInfo()+"");
                 Log.i("테스트",received.getTimeInfo()+"");
 
-                serviceStart();
                 URLTh_send urlth_send = new URLTh_send();
                 Thread Sthread = new Thread(urlth_send);
                 Sthread.start();
@@ -492,6 +491,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                serviceStart();
 
 
                 Toast.makeText(this,"rtnm info : " + received.getRoute_nm(),Toast.LENGTH_LONG);
