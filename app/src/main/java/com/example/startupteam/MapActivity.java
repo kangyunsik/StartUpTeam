@@ -94,6 +94,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
     private Document end;
     private TextView start_text;
     private TextView end_text;
+    private MapPOIItem customMarker, dcustomMarker;
     GpsTracker gpsTracker;
     MapPOIItem st, dest;
     String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION};
@@ -254,6 +255,8 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                             "알림 서비스를 종료합니다.",
                             Toast.LENGTH_LONG).show();
                     mapView.removeAllPolylines();
+                    mapView.removePOIItem(customMarker);
+                    mapView.removePOIItem(dcustomMarker);
                 }
                 else
                     Toast.makeText(getApplicationContext(),
@@ -661,10 +664,14 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
             JSONObject jsonObject = new JSONObject(json);
             JSONObject data = jsonObject.getJSONObject("data");
             String takeBusName="", takeBuslat="", takeBuslon="";
-                takeBusName = data.getString("name");
-                takeBuslat = data.getString("latitude");
-                takeBuslon = data.getString("longitude");
-            MapPOIItem customMarker = new MapPOIItem();
+            String dtakeBusName="", dtakeBuslat="", dtakeBuslon="";
+            takeBusName = data.getString("name");
+            takeBuslat = data.getString("latitude");
+            takeBuslon = data.getString("longitude");
+            dtakeBuslat = data.getString("dlatitude");
+            dtakeBuslon = data.getString("dlongitude");
+            customMarker = new MapPOIItem();
+
             Log.d("parsingresult","pars");
             mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(Double.parseDouble(takeBuslat),Double.parseDouble(takeBuslon)), true);
             customMarker.setItemName("탑승 정류장 : "+takeBusName);
@@ -675,6 +682,16 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
             customMarker.setCustomImageAutoscale(false); // hdpi, xhdpi 등 안드로이드 플랫폼의 스케일을 사용할 경우 지도 라이브러리의 스케일 기능을 꺼줌.
             customMarker.setCustomImageAnchor(0.5f, 1.0f); // 마커 이미지중 기준이 되는 위치(앵커포인트) 지정 - 마커 이미지 좌측 상단 기준 x(0.0f ~ 1.0f), y(0.0f ~ 1.0f) 값.
             mapView.addPOIItem(customMarker);
+            dcustomMarker = new MapPOIItem();
+            dcustomMarker.setItemName("하차 정류장");
+            dcustomMarker.setTag(1);
+            dcustomMarker.setMapPoint(MapPoint.mapPointWithGeoCoord(Double.parseDouble(dtakeBuslat),Double.parseDouble(dtakeBuslon)));
+            dcustomMarker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
+            dcustomMarker.setCustomImageResourceId(R.drawable.busmarker); // 마커 이미지.
+            dcustomMarker.setCustomImageAutoscale(false); // hdpi, xhdpi 등 안드로이드 플랫폼의 스케일을 사용할 경우 지도 라이브러리의 스케일 기능을 꺼줌.
+            dcustomMarker.setCustomImageAnchor(0.5f, 1.0f); // 마커 이미지중 기준이 되는 위치(앵커포인트) 지정 - 마커 이미지 좌측 상단 기준 x(0.0f ~ 1.0f), y(0.0f ~ 1.0f) 값.
+            mapView.addPOIItem(dcustomMarker);
+
             MapPolyline polyline = new MapPolyline();
             polyline.setTag(1000);
             polyline.setLineColor(Color.argb(128, 255, 51, 0)); // Polyline 컬러 지정.
