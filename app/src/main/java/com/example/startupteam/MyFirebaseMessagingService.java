@@ -26,7 +26,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     //푸시 알림 설정
     private String title ="";
     private String body ="";
-    private String color ="";
+    private String color ="f45342";
     private String icon = "";
 
     // [START receive_message]
@@ -44,6 +44,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //            title = remoteMessage.getData().get("title");
 //            body = remoteMessage.getData().get("body");
 //            color = remoteMessage.getData().get("color");
+            title = remoteMessage.getData().get("title");
+            body = remoteMessage.getData().get("content");
+            Log.d(TAG, "Message data title: " + title);
+            Log.d(TAG, "Message data body : " + body);
 
             if (/* Check if data needs to be processed by long running job */ true) {
                 // For long-running tasks (10 seconds or more) use Firebase Job Dispatcher.
@@ -56,12 +60,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
 
         //Notification 사용했을때 data 가져오기
-        if (remoteMessage.getNotification() != null) {
-            Log.d(TAG, "Message Notification Body: " + (color = remoteMessage.getNotification().getColor()));
-            Log.d(TAG, "Message Notification Body: " + (icon = remoteMessage.getNotification().getIcon()));
-            Log.d(TAG, "Message Notification Body: " + (title = remoteMessage.getNotification().getTitle()));
-            Log.d(TAG, "Message Notification Body: " + (body = remoteMessage.getNotification().getBody()));
-        }
+//        if (remoteMessage.getNotification() != null) {
+//            Log.d(TAG, "Message Notification Body: " + (color = remoteMessage.getNotification().getColor()));
+//            Log.d(TAG, "Message Notification Body: " + (icon = remoteMessage.getNotification().getIcon()));
+//            Log.d(TAG, "Message Notification Body: " + (title = remoteMessage.getNotification().getTitle()));
+//            Log.d(TAG, "Message Notification Body: " + (body = remoteMessage.getNotification().getBody()));
+//        }
 
         sendNotification();
         // Also if you intend on generating your own notifications as a result of a received FCM
