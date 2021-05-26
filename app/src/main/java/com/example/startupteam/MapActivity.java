@@ -68,6 +68,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
         return false;
     });
     Menu menu;
+    private int count =0;
     boolean serviceStatus = false;
     private Intent intentservice;
     private String token;
@@ -498,7 +499,6 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 //  time    : 각각의 시간 소요 list. route list와 index가 같음.
 
                 received = data.getParcelableExtra("route");
-                int count = 0;
                 for (int i = 0; i < received.getBusInfo().size(); i++) {
                     if (!(received.getBusInfo().get(i).equals("0"))) {
                         SBusnum = received.getBusInfo().get(i);
@@ -507,22 +507,28 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 }
                 if(received.getBusInfo().size()<=3) {
                     SBusStation = received.getLastStation();
+                    for (int i = 0; i < received.getBusStation().size(); i++) {
+                        if (!(received.getBusStation().get(i).equals("0"))) {
+                            stBusStation = received.getBusStation().get(i);
+                            break;
+                        }
+                    }
                 }
                 else {
                     for (int i = 0; i < received.getBusStation().size(); i++) {
                         if (!(received.getBusStation().get(i).equals("0"))) {
                             if(count==0){
                                 stBusStation = received.getBusStation().get(i);
+                                Log.d("startstation",stBusStation);
                             }
                             else if(count==1){
                                 SBusStation = received.getBusStation().get(i);
                             }
                             count++;
-
-
                         }
                     }
                 }
+                count = 0;
                 Log.i("첫번째 버스",SBusnum);
                 Log.i("정류장",received.getBusStation()+"");
                 Log.i("테스트",received.getRoute_nm());
