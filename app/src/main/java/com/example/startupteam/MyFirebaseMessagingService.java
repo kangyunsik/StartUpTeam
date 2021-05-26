@@ -26,7 +26,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     //푸시 알림 설정
     private String title ="";
     private String body ="";
-    private String color ="f45342";
+    private String color ="#f45342";
     private String icon = "";
 
     // [START receive_message]
