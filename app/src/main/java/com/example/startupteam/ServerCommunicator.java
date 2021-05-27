@@ -48,7 +48,7 @@ public class ServerCommunicator extends IntentService {
             Messenger messenger = (Messenger) extras.get("MESSENGER");
             Message msg = Message.obtain();
             msg.arg1 = Activity.RESULT_OK;
-            msg.obj = "This is message";
+            msg.obj = "하차 알림을 시작합니다.";
             try{
                 messenger.send(msg);
             }catch(android.os.RemoteException e){
