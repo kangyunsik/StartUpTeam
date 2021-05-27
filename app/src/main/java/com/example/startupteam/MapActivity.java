@@ -590,6 +590,16 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
             }
         }else if (requestCode==GET_TRANSFER){
             if(resultCode==RESULT_OK){
+                if(mapView==null) {
+                    mapView = new MapView(this);
+                    mapViewContainer = findViewById(R.id.map_view);
+                    mapViewContainer.addView(mapView);
+                    mapView.setMapViewEventListener(this);
+                    mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
+                    gpsTracker = new GpsTracker(MapActivity.this);
+                    mapView.removeAllPOIItems();
+                    mapView.removeAllPolylines();
+                }
                 Toast.makeText(MapActivity.this,"경로를 불러오는 중입니다.",Toast.LENGTH_LONG).show(); // 왜 안되지
                 mapView.removeAllPolylines();
                 busActivityStart();
