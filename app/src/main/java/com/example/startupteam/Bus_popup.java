@@ -19,9 +19,9 @@ public class Bus_popup extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_bus_popup);
 
-        TextView rtnm = findViewById(R.id.status_popup_dest);
-        TextView rt = findViewById(R.id.status_popup_busnum);
-        TextView time = findViewById(R.id.status_popup_buss);
+        TextView rtnm = findViewById(R.id.transfer_popup_dest);
+        TextView rt = findViewById(R.id.transfer_popup_station);
+        TextView time = findViewById(R.id.transfer_popup_lstation);
 
         received = getIntent().getParcelableExtra("route");
         ArrayList<String> bnumcollect = new ArrayList<String>();
@@ -45,7 +45,7 @@ public class Bus_popup extends AppCompatActivity {
 
     public void onClick(View v){
         switch(v.getId()){
-            case R.id.status_popup_ok:
+            case R.id.transfer_popup_ok:
                 //Intent intent = new Intent();
                 setResult(RESULT_OK,getIntent());
                 finish();

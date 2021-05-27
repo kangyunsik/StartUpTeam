@@ -15,7 +15,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/status_popup_dest"
+            android:id="@+id/transfer_popup_dest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -25,7 +25,7 @@
             android:textSize="16dp" />
 
         <TextView
-            android:id="@+id/status_popup_busnum"
+            android:id="@+id/transfer_popup_station"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -35,7 +35,7 @@
             android:textSize="14dp" />
 
         <TextView
-            android:id="@+id/status_popup_buss"
+            android:id="@+id/transfer_popup_lstation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -49,7 +49,7 @@
             android:gravity="center_horizontal">
 
             <Button
-                android:id="@+id/status_popup_ok"
+                android:id="@+id/transfer_popup_ok"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="onClick"

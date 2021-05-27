@@ -18,7 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StartUpTeam"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Status_popup"></activity>
+        <activity android:name=".Transfer_popup"></activity>
+        <activity android:name=".Status_popup" />
 
         <service android:name=".MyFirebaseMessagingService">
             <intent-filter>
@@ -77,7 +78,7 @@
             android:value="true" />
 
         <activity android:name=".MapActivity" />
-        <activity android:name=".MainActivity"></activity> <!-- API KEY -->
+        <activity android:name=".MainActivity" /> <!-- API KEY -->
         <!--
 <meta-data
             android:name="com.kakao.sdk.AppKey"
