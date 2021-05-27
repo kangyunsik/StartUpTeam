@@ -197,7 +197,6 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 Toast.makeText(MapActivity.this,"경로를 불러오는 중입니다.",Toast.LENGTH_LONG).show(); // 왜 안되지.
                 mapView.removeAllPolylines();
                          // 추후 하단 else문에 넣기. 현재 테스트 중
-                busActivityStart();     // 추후 하단 else문에 넣기. 현재 테스트 중
 
                 if(start_text.getText().toString().equals("출발지를 입력하세요")||
                         end_text.getText().toString().equals("도착지를 입력하세요")){
@@ -207,6 +206,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 }
                 else {
                     mapView.fitMapViewAreaToShowAllPOIItems();
+                    busActivityStart();
                 }
                 break;
         }
@@ -241,16 +241,8 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
             start_text.setText(r_station);
             end_text.setText(r_lstation);
         }
-        else if(start == null){
-            start = new Document();
-            start.setX("127.11704645705142");
-            start.setY("37.27545287699772");
-            end = new Document();
-            end.setX("127.04366229466967");
-            end.setY("37.28305700556231");
-        }
 
-        //      TEST CODE
+
 
         Intent intent = new Intent(this,BusActivity.class);
         intent.putExtra("start",start);
