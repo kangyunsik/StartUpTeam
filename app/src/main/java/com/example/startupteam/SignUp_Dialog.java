@@ -46,6 +46,10 @@ public class SignUp_Dialog extends Dialog {
         tv_pw = this.findViewById(R.id.edit_customD_pw);
         tv_email = this.findViewById(R.id.edit_customD_email);
 
+        tv_id.setText("test3");
+        tv_pw.setText("test3");
+        tv_email.setText("test3@naver.com");
+
         m_oDialog = this;
 
         Button oBtn = (Button) this.findViewById(R.id.button_customD_cancel);
@@ -73,7 +77,7 @@ public class SignUp_Dialog extends Dialog {
             return;
         }
 
-        URLTh urlth = new URLTh();
+        URLTh urlth = new URLTh(id,pw,email);
         Thread Sthread = new Thread(urlth);
         Sthread.start();
         try {
@@ -88,10 +92,20 @@ public class SignUp_Dialog extends Dialog {
     }
 
     class URLTh extends Thread {
+        String id,pw,email;
+
+        public URLTh(String id, String pw, String email){
+            this.id = id;
+            this.pw = pw;
+            this.email = email;
+        }
+
         @Override
         public void run() {
 
-
+            Log.d("쓰레드",id);
+            Log.d("쓰레드",pw);
+            Log.d("쓰레드",email);
             URL url = null;
             String br_result = "";
             String hashed = SHA256.DoHash(pw);
