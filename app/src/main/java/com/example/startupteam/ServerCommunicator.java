@@ -56,8 +56,8 @@ public class ServerCommunicator extends IntentService {
             }
         }
 
-
-        while(true) {
+        String result ="ok";
+        do {
             try {
                 Thread.sleep(3000);
                 gpsTracker.getLocation();
@@ -74,17 +74,18 @@ public class ServerCommunicator extends IntentService {
 
                 is = con.getInputStream();
                 br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-                String result;
-                while ((result = br.readLine()) != null) {
-                    Log.i("Suc","["+result+"]");
-                }
+
+                result = br.readLine();
+
+                Log.i("Suc","["+result+"]");
+
                 Log.i("Suc","TT");
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+        }while(result.equals("ok"));
 
     }
 }
