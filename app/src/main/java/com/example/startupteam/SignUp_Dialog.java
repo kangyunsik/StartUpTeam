@@ -23,9 +23,6 @@ public class SignUp_Dialog extends Dialog {
     TextView tv_pw;
     TextView tv_email;
 
-    String id;
-    String pw;
-    String email;
 
     public SignUp_Dialog(Context context) {
         super(context, android.R.style.Theme_Translucent_NoTitleBar);
