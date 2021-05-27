@@ -602,6 +602,8 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                     mapView.removeAllPOIItems();
                     mapView.removeAllPolylines();
                 }
+                startlat = Double.parseDouble(r_buslat);
+                startlon = Double.parseDouble(r_buslon);
                 Toast.makeText(MapActivity.this,"경로를 불러오는 중입니다.",Toast.LENGTH_LONG).show(); // 왜 안되지
                 mapView.removeAllPolylines();
                 busActivityStart();
