@@ -56,7 +56,7 @@ import java.util.ArrayList;
 
 
 public class MapActivity extends AppCompatActivity implements MapView.CurrentLocationEventListener, MapView.MapViewEventListener {
-    private Handler handler = new Handler((message)-> {
+    private final Handler handler = new Handler((message)-> {
         Object path = message.obj;
         if (message.arg1 == RESULT_OK && path != null) {
             Toast.makeText(getApplicationContext(),
@@ -126,15 +126,24 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
         mapView.setMapViewEventListener(this);
         mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
         gpsTracker = new GpsTracker(MapActivity.this);
+        start_text.setText("출발지를 입력하세요");
+        end_text.setText("도착지를 입력하세요");
+        if(serviceStatus){
+            serviceStatus= false;
+            stopService(intentservice);
+        }
+        mapView.removeAllPOIItems();
+        mapView.removeAllPolylines();
         try{
             String[] temp = new String[2];
-            received_id = getIntent().getStringExtra("receivedid_id");
+            received_id = getIntent().getStringExtra("received_id");
+            Log.d("receivedid","cant");
             r_station = getIntent().getStringExtra("busstation");
             r_lstation = getIntent().getStringExtra("laststation");
-            temp = getIntent().getStringExtra("bus_latlon").split(":");
+            temp = getIntent().getStringExtra("bus_latlng").split(":");
             r_buslat = temp[0];
             r_buslon = temp[1];
-            temp = getIntent().getStringExtra("last_latlon").split(":");
+            temp = getIntent().getStringExtra("last_latlng").split(":");
             r_lbuslat = temp[0];
             r_lbuslon = temp[1];
             if(received_id!=null){
@@ -595,14 +604,9 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
             }
         }else if (requestCode==GET_TRANSFER){
             if(resultCode==RESULT_OK){
-                Toast.makeText(MapActivity.this,"경로를 불러오는 중입니다.",Toast.LENGTH_LONG).show(); // 왜 안되지.
+                Toast.makeText(MapActivity.this,"경로를 불러오는 중입니다.",Toast.LENGTH_LONG).show(); // 왜 안되지
                 mapView.removeAllPolylines();
-                // 추후 하단 else문에 넣기. 현재 테스트 중
-
-                busActivityStart();     // 추후 하단 else문에 넣기. 현재 테스트 중
-                mapView.fitMapViewAreaToShowAllPOIItems();
-
-
+                busActivityStart();
             }
         }
     }
