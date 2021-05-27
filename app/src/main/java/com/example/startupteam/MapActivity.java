@@ -601,8 +601,16 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                     serviceStatus= false;
                     stopService(intentservice);
                 }
-                mapView.removeAllPOIItems();
-                mapView.removeAllPolylines();
+                if(mapView==null) {
+                    mapView = new MapView(this);
+                    mapViewContainer = findViewById(R.id.map_view);
+                    mapViewContainer.addView(mapView);
+                    mapView.setMapViewEventListener(this);
+                    mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
+                    gpsTracker = new GpsTracker(MapActivity.this);
+                    mapView.removeAllPOIItems();
+                    mapView.removeAllPolylines();
+                }
             }
         }
     }
