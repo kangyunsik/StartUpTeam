@@ -20,9 +20,9 @@ public class Status_popup extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_status_popup);
 
-        TextView dest = findViewById(R.id.status_popup_dest);
-        TextView bnum = findViewById(R.id.status_popup_busnum);
-        TextView buss = findViewById(R.id.status_popup_buss);
+        TextView dest = findViewById(R.id.transfer_popup_dest);
+        TextView bnum = findViewById(R.id.transfer_popup_station);
+        TextView buss = findViewById(R.id.transfer_popup_lstation);
 
         received = getIntent().getParcelableExtra("route");
         ArrayList<String> bnumcollect = new ArrayList<String>();
@@ -44,7 +44,7 @@ public class Status_popup extends AppCompatActivity {
 
     public void onClick(View v){
         switch(v.getId()){
-            case R.id.status_popup_ok:
+            case R.id.transfer_popup_ok:
                 finish();
                 break;
         }

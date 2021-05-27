@@ -56,7 +56,7 @@ import java.util.ArrayList;
 
 
 public class MapActivity extends AppCompatActivity implements MapView.CurrentLocationEventListener, MapView.MapViewEventListener {
-    private Handler handler = new Handler((message)-> {
+    private final Handler handler = new Handler((message)-> {
         Object path = message.obj;
         if (message.arg1 == RESULT_OK && path != null) {
             Toast.makeText(getApplicationContext(),
@@ -88,17 +88,23 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
     public static final int GET_STRING_START = 10001;
     public static final int GET_STRING_END = 10002;
     public static final int GET_STRING_BUS = 10003;
-    public static final int SHOW_CURRENT = 10010;
+    public static final int GET_TRANSFER = 10010;
     private MapPoint map_point;
     private Document start;
     private Document end;
     private TextView start_text;
     private TextView end_text;
     private MapPOIItem customMarker, dcustomMarker;
+    private boolean type = true;
     GpsTracker gpsTracker;
     MapPOIItem st, dest;
     String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION};
 
+    private String received_id;
+    private String r_station;
+    private String r_lstation;
+    private String r_buslat, r_buslon;
+    private String r_lbuslat, r_lbuslon;
 
     public final static String server_ip = "34.84.111.70";
     //public final static String server_ip = "59.18.147.95";
@@ -110,11 +116,6 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-
-        id = getIntent().getStringExtra("id");
-
-        //지도를 띄우자
-        // java code
         start_text = (TextView)findViewById(R.id.start_text);
         end_text = (TextView)findViewById(R.id.end_text);
         progressBar = findViewById(R.id.progressbar);
@@ -124,15 +125,50 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
         mapViewContainer.addView(mapView);
         mapView.setMapViewEventListener(this);
         mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
+        gpsTracker = new GpsTracker(MapActivity.this);
+        start_text.setText("출발지를 입력하세요");
+        end_text.setText("도착지를 입력하세요");
+        if(serviceStatus){
+            serviceStatus= false;
+            stopService(intentservice);
+        }
+        mapView.removeAllPOIItems();
+        mapView.removeAllPolylines();
+        try{
+            String[] temp = new String[2];
+            received_id = getIntent().getStringExtra("received_id");
+            Log.d("receivedid","cant");
+            r_station = getIntent().getStringExtra("busstation");
+            r_lstation = getIntent().getStringExtra("laststation");
+            temp = getIntent().getStringExtra("bus_latlng").split(":");
+            r_buslat = temp[0];
+            r_buslon = temp[1];
+            temp = getIntent().getStringExtra("last_latlng").split(":");
+            r_lbuslat = temp[0];
+            r_lbuslon = temp[1];
+            if(received_id!=null){
+                id = received_id;
+                type= false;
+            }
+            Intent transferIntent = new Intent(getApplicationContext(), Transfer_popup.class);
+            transferIntent.putExtra("busstation",r_station);
+            transferIntent.putExtra("laststation",r_lstation);
+            startActivityForResult(transferIntent,MapActivity.GET_TRANSFER);
 
-        token = getIntent().getStringExtra("token");
+        }catch(Exception e){
+            type = true;
+            Log.d("Login","main->map");
+        }
+        if(type) {
+            id = getIntent().getStringExtra("id");
+            token = getIntent().getStringExtra("token");
+        }
 
         if (!checkLocationServicesStatus()) {
             showDialogForLocationServiceSetting();
         } else {
             checkRunTimePermission();
         }
-        gpsTracker = new GpsTracker(MapActivity.this);
     }
 
     @Override
@@ -164,7 +200,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 busActivityStart();     // 추후 하단 else문에 넣기. 현재 테스트 중
 
                 if(start_text.getText().toString().equals("출발지를 입력하세요")||
-                end_text.getText().toString().equals("도착지를 입력하세요")){
+                        end_text.getText().toString().equals("도착지를 입력하세요")){
                     Toast.makeText(getApplicationContext(),
                             "출발지와 도착지를 먼저 입력하세요.",
                             Toast.LENGTH_LONG).show();
@@ -195,7 +231,17 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
         progressBar.setVisibility(View.VISIBLE);
 
         //      TEST CODE
-        if(start == null){
+        if(!type){
+            start = new Document();
+            start.setX(r_buslon);
+            start.setY(r_buslat);
+            end = new Document();
+            end.setX(r_lbuslon);
+            end.setY(r_lbuslat);
+            start_text.setText(r_station);
+            end_text.setText(r_lstation);
+        }
+        else if(start == null){
             start = new Document();
             start.setX("127.11704645705142");
             start.setY("37.27545287699772");
@@ -203,6 +249,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
             end.setX("127.04366229466967");
             end.setY("37.28305700556231");
         }
+
         //      TEST CODE
 
         Intent intent = new Intent(this,BusActivity.class);
@@ -555,6 +602,12 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 Log.i("테스트","result CODE : " + resultCode);
 
             }
+        }else if (requestCode==GET_TRANSFER){
+            if(resultCode==RESULT_OK){
+                Toast.makeText(MapActivity.this,"경로를 불러오는 중입니다.",Toast.LENGTH_LONG).show(); // 왜 안되지
+                mapView.removeAllPolylines();
+                busActivityStart();
+            }
         }
     }
 //
@@ -617,7 +670,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
         public void run() {
             URL url = null;
             try {
-                url = new URL( "http:"+MapActivity.server_ip +":"+ MapActivity.server_port + "/"+"setRoute?id="+id+"&startstation="+stBusStation+"&busnum="+SBusnum+"&busstation="+SBusStation);
+                url = new URL( "http:"+MapActivity.server_ip +":"+ MapActivity.server_port + "/"+"setRoute?id="+id+"&startstation="+stBusStation+"&busnum="+SBusnum+"&busstation="+SBusStation+"&laststation="+received.getLastStation());
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
