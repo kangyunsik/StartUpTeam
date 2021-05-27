@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("MESSENGER", messenger);
             intent.putExtra("uripath", scURL);
             intent.putExtra("id", id);
+            intent.putExtra("token",tok);
             intent.putExtra("pw", password);
             intent.setData(Uri.parse(scURL));
             startService(intent);
@@ -130,47 +131,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private class URLTh extends Thread {
-        @Override
-        public void run() {
-            URL url = null;
-            try {
-                url = new URL("https://dapi.kakao.com/v2/local/search/keyword.json?y=37.514322572335935&x=127.06283102249932&radius=20000&query=cafe");
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            HttpURLConnection urlCon = null;
-            try {
-                urlCon = (HttpURLConnection) url.openConnection();
-                urlCon.setRequestProperty("Authorization", "KakaoAK 08524df1fb5ba759f2cfd86e83401e49");
-                urlCon.setRequestMethod("GET");
-                urlCon.setDoInput(true);
-                urlCon.setDoOutput(true);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                urlCon.disconnect();
-            }
-            Log.d("Suc", "success1");
-            try {
-                if (urlCon.getResponseCode() == 200) {
-                    BufferedReader br = new BufferedReader(new InputStreamReader((urlCon.getInputStream()), "UTF-8"));
-                    String str = br.readLine();
-                    Log.d("Suc", str);
-
-                    Log.d("Suc", "success");
-                } else {
-                    // Error handling code goes here
-                    Log.d("Suc", Integer.toString(urlCon.getResponseCode()));
-                    Log.d("Suc", "fail");
-                }
-            } catch (IOException e) {
-                Log.d("Suc", "fail2");
-                e.printStackTrace();
-
-            }
-        }
-    }
 
     private class Checker extends Thread {
         private int response;

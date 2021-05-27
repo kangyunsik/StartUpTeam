@@ -19,13 +19,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class LoginService extends IntentService {
-
+    String token;
     public LoginService() {
         super("LoginService");
     }
     @Override
     protected void onHandleIntent(Intent intent) {
         String uriPath = intent.getStringExtra("uripath");
+        token = intent.getStringExtra("token");
         String result = "";
         String sendMsg = "";
 
@@ -46,7 +47,7 @@ public class LoginService extends IntentService {
 
             OutputStreamWriter osw;
             osw = new OutputStreamWriter(os);
-            sendMsg = "id=" + intent.getStringExtra("id") + "&pw=" + intent.getStringExtra("pw"); // GET방식으로 작성해 POST로 보냄
+            sendMsg = "id=" + intent.getStringExtra("id") + "&pw=" + intent.getStringExtra("pw") + "&token=" + token; // GET방식으로 작성해 POST로 보냄
             osw.write(sendMsg);                           // OutputStreamWriter에 담아 전송
             osw.flush();
 

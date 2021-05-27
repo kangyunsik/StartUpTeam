@@ -185,7 +185,6 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
         intentservice.putExtra("MESSENGER",messenger);
         intentservice.putExtra("uripath",scURL);
         intentservice.putExtra("id",id);
-        intentservice.putExtra("token",token);
         intentservice.setData(Uri.parse(scURL));
         serviceStatus= true;
         startService(intentservice);
@@ -660,6 +659,8 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
     }
     public void markTakeBus(String json) {
         try {
+            Log.d("mylocationlat", Double.toString(gpsTracker.getLatitude()));
+            Log.d("mylocationlon", Double.toString(gpsTracker.getLongitude()));
             Log.d("markjson value",json);
             JSONObject jsonObject = new JSONObject(json);
             JSONObject data = jsonObject.getJSONObject("data");
@@ -683,7 +684,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
             customMarker.setCustomImageAnchor(0.5f, 1.0f); // 마커 이미지중 기준이 되는 위치(앵커포인트) 지정 - 마커 이미지 좌측 상단 기준 x(0.0f ~ 1.0f), y(0.0f ~ 1.0f) 값.
             mapView.addPOIItem(customMarker);
             dcustomMarker = new MapPOIItem();
-            dcustomMarker.setItemName("하차 정류장");
+            dcustomMarker.setItemName("하차 지점 ");
             dcustomMarker.setTag(1);
             dcustomMarker.setMapPoint(MapPoint.mapPointWithGeoCoord(Double.parseDouble(dtakeBuslat),Double.parseDouble(dtakeBuslon)));
             dcustomMarker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
