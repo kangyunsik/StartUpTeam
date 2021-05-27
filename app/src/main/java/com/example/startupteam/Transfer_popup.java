@@ -48,6 +48,7 @@ public class Transfer_popup extends AppCompatActivity {
                     break;
                 }
                 else if(ca){
+                    setResult(-100,intent);
                     finish();
                     break;
                 }
