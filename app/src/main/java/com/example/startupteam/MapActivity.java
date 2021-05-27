@@ -563,8 +563,10 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 }
 
                 count = 0;
-                mapView.removePOIItem(customMarker);
-                mapView.removePOIItem(dcustomMarker);
+                if(customMarker != null) {
+                    mapView.removePOIItem(customMarker);
+                    mapView.removePOIItem(dcustomMarker);
+                }
                 Log.i("첫번째 버스",SBusnum);
                 Log.i("정류장",received.getBusStation()+"");
                 Log.i("테스트",received.getRoute_nm());
