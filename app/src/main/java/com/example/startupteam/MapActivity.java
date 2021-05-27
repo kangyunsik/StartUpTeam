@@ -126,14 +126,6 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
         mapView.setMapViewEventListener(this);
         mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
         gpsTracker = new GpsTracker(MapActivity.this);
-        start_text.setText("출발지를 입력하세요");
-        end_text.setText("도착지를 입력하세요");
-        if(serviceStatus){
-            serviceStatus= false;
-            stopService(intentservice);
-        }
-        mapView.removeAllPOIItems();
-        mapView.removeAllPolylines();
         try{
             String[] temp = new String[2];
             received_id = getIntent().getStringExtra("received_id");
@@ -599,6 +591,16 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 Toast.makeText(MapActivity.this,"경로를 불러오는 중입니다.",Toast.LENGTH_LONG).show(); // 왜 안되지
                 mapView.removeAllPolylines();
                 busActivityStart();
+            }
+            else if(resultCode == -100){
+                start_text.setText("출발지를 입력하세요");
+                end_text.setText("도착지를 입력하세요");
+                if(serviceStatus){
+                    serviceStatus= false;
+                    stopService(intentservice);
+                }
+                mapView.removeAllPOIItems();
+                mapView.removeAllPolylines();
             }
         }
     }
