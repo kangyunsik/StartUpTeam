@@ -25,9 +25,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     //푸시 알림 설정
     private String title ="";
-    private String body ="";
+    private String busstation = "";
+    private String bus_latlng = "";
+    private String laststation = "";
+    private String last_latlng = "";
+    private String received_id = "";
+
+    private String body;
+
     private String color ="#f45342";
-    private String icon = "";
+
 
     // [START receive_message]
     @Override
@@ -45,9 +52,25 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //            body = remoteMessage.getData().get("body");
 //            color = remoteMessage.getData().get("color");
             title = remoteMessage.getData().get("title");
-            body = remoteMessage.getData().get("content");
+            busstation = remoteMessage.getData().get("busstation");
+            bus_latlng = remoteMessage.getData().get("bus_latlng");
+            laststation = remoteMessage.getData().get("laststation");
+            last_latlng = remoteMessage.getData().get("last_latlng");
+            received_id = remoteMessage.getData().get("id");
+
             Log.d(TAG, "Message data title: " + title);
-            Log.d(TAG, "Message data body : " + body);
+            Log.d(TAG, "Message data busstation: " + busstation);
+            Log.d(TAG, "Message data bus_latlng: " + bus_latlng);
+            Log.d(TAG, "Message data laststation: " + laststation);
+            Log.d(TAG, "Message data last_latlng: " + last_latlng);
+            Log.d(TAG, "Message data received_id: " + received_id);
+
+            title = title + received_id;
+            if(busstation.equals(laststation)){
+                body = "마지막 알림입니다.";
+            }else {
+                body = "다음 승차 지점은 [" + busstation + "] 입니다.";
+            }
 
             if (/* Check if data needs to be processed by long running job */ true) {
                 // For long-running tasks (10 seconds or more) use Firebase Job Dispatcher.
@@ -108,6 +131,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private void sendNotification() {
         Intent intent = new Intent(this, MapActivity.class);
+        intent.putExtra("busstation",busstation);
+        intent.putExtra("bus_latlng",bus_latlng);
+        intent.putExtra("laststation",laststation);
+        intent.putExtra("last_latlng",last_latlng);
+        intent.putExtra("received_id",received_id);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
