@@ -47,7 +47,7 @@ public class LoginService extends IntentService {
 
             OutputStreamWriter osw;
             osw = new OutputStreamWriter(os);
-            sendMsg = "id=" + intent.getStringExtra("id") + "&pw=" + intent.getStringExtra("pw") + "&token=" + token; // GET방식으로 작성해 POST로 보냄
+            sendMsg = "id=" + intent.getStringExtra("id") + "&pw=" + SHA256.DoHash(intent.getStringExtra("pw")) + "&token=" + token; // GET방식으로 작성해 POST로 보냄
             osw.write(sendMsg);                           // OutputStreamWriter에 담아 전송
             osw.flush();
 
