@@ -152,7 +152,7 @@ public class BusActivity extends AppCompatActivity {
             mySubParse(s);
         }
     }
-
+//
     public void mySubParse(String in){
         in = in.replaceAll("환승","");
         in = in.replaceAll("\"","");
