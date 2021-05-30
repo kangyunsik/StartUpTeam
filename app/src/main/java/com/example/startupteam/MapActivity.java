@@ -119,7 +119,6 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
         start_text = (TextView)findViewById(R.id.start_text);
         end_text = (TextView)findViewById(R.id.end_text);
         progressBar = findViewById(R.id.progressbar);
-
         mapView = new MapView(this);
         mapViewContainer = findViewById(R.id.map_view);
         mapViewContainer.addView(mapView);
@@ -182,6 +181,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 startActivityForResult(intent,GET_STRING_END);
                 break;
             case R.id.my_btn:
+                gpsTracker = new GpsTracker(MapActivity.this);
                 mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(gpsTracker.getLatitude(),gpsTracker.getLongitude()),true);
                 //mapView.setMapCenterPoint(map_point,true);
                 break;
@@ -457,6 +457,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                     start = new Document();
                 if(st!=null)
                     mapView.removePOIItem(st);
+                gpsTracker = new GpsTracker(MapActivity.this);
                 start.setRoadAddressName("불명");
                 start.setPlaceName("현재 위치");
                 start.setX(Double.toString(gpsTracker.getLongitude()));
@@ -506,6 +507,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                     end = new Document();
                 if(dest!=null)
                     mapView.removePOIItem(dest);
+                gpsTracker = new GpsTracker(MapActivity.this);
                 end.setRoadAddressName("불명");
                 end.setPlaceName("현재 위치");
                 end.setX(Double.toString(gpsTracker.getLongitude()));
