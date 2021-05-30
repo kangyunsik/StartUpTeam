@@ -65,9 +65,13 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
             Toast.makeText(getApplicationContext(),
                     " " + path.toString(), Toast.LENGTH_LONG).show();
         }
+        if(path.toString().equals("버스 승차 확인되었습니다.")){
+            takebus="1";
+        }
         return false;
     });
     Menu menu;
+    private String takebus = "0";
     private int count =0;
     boolean serviceStatus = false;
     private Intent intentservice;
@@ -274,6 +278,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                     Intent intent = new Intent(getApplicationContext(), Status_popup.class);
                     intent.putExtra("route",received);
                     intent.putExtra("dest",end_text.getText().toString());
+                    intent.putExtra("take",takebus);
                     startActivity(intent);
                 }
                 break;
@@ -281,6 +286,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 if(serviceStatus) {
                     stopService(intentservice);
                     serviceStatus=false;
+                    takebus="0";
                     Toast.makeText(getApplicationContext(),
                             "알림 서비스를 종료합니다.",
                             Toast.LENGTH_LONG).show();

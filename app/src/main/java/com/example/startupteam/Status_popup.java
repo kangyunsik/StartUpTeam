@@ -19,7 +19,7 @@ public class Status_popup extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_status_popup);
-
+        String takebus;
         TextView dest = findViewById(R.id.transfer_popup_dest);
         TextView bnum = findViewById(R.id.transfer_popup_station);
         TextView buss = findViewById(R.id.transfer_popup_lstation);
@@ -37,9 +37,15 @@ public class Status_popup extends AppCompatActivity {
                 break;
             }
         }
+        if(getIntent().getStringExtra("take").equals("0")){
+            takebus = "탑승 여부 : X";
+        }
+        else{
+            takebus = "탑승 여부 : O";
+        }
         dest.setText("목적지 : "+getIntent().getStringExtra("dest"));
         bnum.setText("탑승 버스 : " + bnumcollect.get(0));
-        buss.setText("탑승 정류장 : " +  bscollect.get(0));
+        buss.setText("탑승 정류장 : " +  bscollect.get(0)+"\n"+takebus);
     }
 
     public void onClick(View v){
