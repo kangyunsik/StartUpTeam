@@ -82,6 +82,7 @@ public class SignUp_Dialog extends Dialog {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        this.dismiss();
     }
 
     public void onClickBtn(View _oView) {
