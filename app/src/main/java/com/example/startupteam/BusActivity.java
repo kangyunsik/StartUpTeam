@@ -156,7 +156,7 @@ public class BusActivity extends AppCompatActivity {
     public void mySubParse(String in){
         in = in.replaceAll("환승","");
         in = in.replaceAll("\"","");
-
+        in = in.replaceAll("spanclasstxttransspan", "");
         String arg = in.split("<")[0];
         if(in.contains("<total>")){
             Route rt = new Route();
