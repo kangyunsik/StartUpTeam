@@ -30,6 +30,8 @@ public class ServerCommunicator extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent){
         //Uri data = intent.getData();
+        Messenger messenger = null;
+        Message msg = null;
         String id = intent.getStringExtra("id");
         String uriPath = intent.getStringExtra("uripath");
 
@@ -45,15 +47,8 @@ public class ServerCommunicator extends IntentService {
 
         Bundle extras = intent.getExtras();
         if(extras!=null){
-            Messenger messenger = (Messenger) extras.get("MESSENGER");
-            Message msg = Message.obtain();
-            msg.arg1 = Activity.RESULT_OK;
-            msg.obj = "하차 알림을 시작합니다.";
-            try{
-                messenger.send(msg);
-            }catch(android.os.RemoteException e){
-                Log.e(getClass().getName(),"Exception sending message", e);
-            }
+            messenger = (Messenger) extras.get("MESSENGER");
+            msg = Message.obtain();
         }
 
         String result ="ok";
@@ -86,6 +81,12 @@ public class ServerCommunicator extends IntentService {
                 e.printStackTrace();
             }
         }while(result.equals("ok"));
-
+            msg.arg1 = Activity.RESULT_OK;
+            msg.obj = "버스 승차 확인되었습니다.";
+            try{
+                messenger.send(msg);
+            }catch(android.os.RemoteException e){
+                Log.e(getClass().getName(),"Exception sending message", e);
+            }
     }
 }
