@@ -1,28 +1,17 @@
 package com.example.startupteam;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+import com.example.startupteam.activity.map.MapActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 /*
 public class SearchActivity extends AppCompatActivity {
     EditText sch;
@@ -41,22 +30,12 @@ public class SearchActivity extends AppCompatActivity {
         skeyword.start();
     }
 }*/
-import android.os.Handler;
-import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.ScheduledExecutorService;
 
 public class SearchActivity extends AppCompatActivity {
     private List<String> list;          // 데이터를 넣은 리스트변수
@@ -155,7 +134,7 @@ public class SearchActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), ResultActivity.class);
         intent.putExtra("keyword",editSearch.getText().toString());
         list.add(editSearch.getText().toString());
-        startActivityForResult(intent,MapActivity.GET_STRING);
+        startActivityForResult(intent, MapActivity.GET_STRING);
     }
 
     @Override

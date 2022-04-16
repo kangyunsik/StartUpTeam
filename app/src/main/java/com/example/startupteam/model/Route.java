@@ -94,7 +94,7 @@ public class Route implements Parcelable {
         this.busStation = busStation;
     }
 
-    protected Route() {
+    public Route() {
         //busInfo = new ArrayList<>();
         //timeInfo = new ArrayList<>();
     }
